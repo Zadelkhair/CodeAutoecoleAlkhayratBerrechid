@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./test-result.css" />
+  <script src="./db.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="app">
+
+      <div class="result-container">
+        <div id="user-wrong-answers" class="user-wrong-answers">
+
+        </div>
+        <div class="result-header">
+          serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - resulta <span
+            id="result">--/--</span>
+        </div>
+        <div class="result-body">
+          <div class="result-media">
+            <img id="result-media" src="" />
+          </div>
+          <div class="result-controls">
+            <div class="result-answer-display" id="answer-display1"></div>
+            <div class="result-answer-display" id="answer-display2"></div>
+            <button class="btn-correction" onclick="prev()">prev</button>
+            <button class="btn-valider" onclick="next()">suiv</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="./result.js"></script>
+
+</body>
+
+</html>

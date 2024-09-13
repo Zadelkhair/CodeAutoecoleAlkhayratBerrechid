@@ -1,0 +1,70 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}    
+.app {
+    width: 1000px;
+    max-width: 90%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.header img {
+    height: 100px;
+}
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.btn {
+    padding: 20px;
+    width: 100%;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #fff;
+    cursor: pointer;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+#series {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.s-btn {
+    padding: 20px;
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #fff;
+    cursor: pointer;
+    font-size: 22px;
+    font-size: 40px;
+}
+
+.s-btn:hover {
+    background-color: #0056b3;
+}

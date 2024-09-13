@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./test-result.css" />
+  <script src="./db.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="app">
+
+
+
+      <div class="test-container">
+        <div class="test-header">
+          serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - <span
+            id="timer">--</span> sec
+        </div>
+        <div class="test-body">
+          <div class="test-media">
+            <img id="test-media" src="" />
+          </div>
+          <div class="test-controls">
+            <div class="test-answer-display" id="answer-display">
+            </div>
+
+            <div id="collecting-data" style="display: none;">
+              <button
+                id="cd-next-btn"
+                onclick="prev()"
+              >
+                prev
+              </button>
+              <!-- 4 checkbox -->
+              <input type="checkbox" id="check1" name="check1" value="1">
+              <label for="check1">1</label>
+              <input type="checkbox" id="check2" name="check2" value="2">
+              <label for="check2">2</label>
+              <input type="checkbox" id="check3" name="check3" value="3">
+              <label for="check3">3</label>
+              <input type="checkbox" id="check4" name="check4" value="4">
+              <label for="check4">4</label>
+              <button
+                id="cd-prev-btn"
+                onclick="next()"
+              >
+                suiv
+              </button>
+              <br/>
+              <!-- <button onclick="pauseResume()">pause</button> -->
+            </div>
+
+            <button class="btn-correction" onclick="clearAnswer()">Correction</button>
+            <div class="test-answers" id="test-answers">
+              <button id="btn1" onclick="checkAnswer('1','btn1')">1</button>
+              <button id="btn2" onclick="checkAnswer('2','btn2')">2</button>
+              <button id="btn3" onclick="checkAnswer('3','btn3')">3</button>
+              <button id="btn4" onclick="checkAnswer('4','btn4')">4</button>
+            </div>
+            <button class="btn-valider" onclick="validate()">Valider</button>
+          </div>
+        </div>
+
+      </div>
+
+      <button id="start-btn">
+        Start
+      </button>
+    </div>
+
+    <script src="./test.js"></script>
+
+    <script src="./collecting-data.js"></script>
+
+</body>
+
+</html>
