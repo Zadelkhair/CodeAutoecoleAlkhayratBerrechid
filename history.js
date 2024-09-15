@@ -1,5 +1,5 @@
 // get test-body
-let testBody = document.querySelector(".test-body");
+let testBody = document.querySelector("#history-body");
 
 // get history local storage
 let history = JSON.parse(localStorage.getItem("history")) ?? [];

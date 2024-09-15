@@ -372,15 +372,17 @@ body {
     height: 40px;
     width: 40px;
     color: black;
-    font-size: 25px;
-    margin-left: 30px;
+    margin-left: 10px;
     border-radius: 100%;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding-top: 5px;
     cursor: pointer;
-    padding-left: 6px;
+}
+
+#pause-btn img {
+    width: 20px;
+    height: 20px;
 }
 
 .btn-history {
@@ -442,7 +444,7 @@ body {
     }
 
     .test-controls {
-        width: 100%;
+        width: unset;
         height: 40%;
         margin: 0;
         border-radius: 0;
@@ -488,7 +490,7 @@ body {
     }
 
     .test-header .test-header-content .test-info {
-        font-size: 14px;
+        font-size: 10px;
         padding-top: 30px;
         text-align: center;
         margin: auto;
