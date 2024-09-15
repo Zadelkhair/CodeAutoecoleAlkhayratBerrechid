@@ -329,7 +329,7 @@ assetsLoader(()=>{
     console.log("All assets loaded");
 },(loaded,total)=>{
     console.log(`${loaded}/${total}`);
-    let percent = (loaded/total)*100;
+    let percent = parseInt((loaded/total)*100);
     progressBarElement.style.width = `${percent}%`;
     progressValElement.innerHTML = `${percent}%`;
 });
