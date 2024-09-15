@@ -1,3 +1,4 @@
+
 // generate random number
 let ID = Math.floor(Math.random() * 1000000);
 
@@ -187,6 +188,8 @@ let nextQuestion = () => {
         else {
             window.location.href = `result.html?series=${seriesNum}&index=${index}&id=${ID}`;
         }
+
+        fullscreen(false);
         return;
     }
 
@@ -223,18 +226,6 @@ let testContainer = document.querySelector(".test-container");
 // hide it
 testContainer.style.display = "none";
 
-// get start-btn
-let startBtn = document.querySelector("#start-btn");
-
-// add event listener
-startBtn.addEventListener("click", () => {
-    // show test-container
-    testContainer.style.display = "flex";
-    // hide start-btn
-    startBtn.style.display = "none";
-    // start test
-    nextQuestion();
-});
 
 let isPaused = false;
 const pause = () => {
@@ -242,12 +233,14 @@ const pause = () => {
     currentAudio.pause();
     isPaused = true;
     pauseBtn.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwUlEQVR4nO3WMWoCQBCF4Q8CwTSms7XQPhfICWxyi1zBNqVX8Aq2llYhhNSCN7BU0ohNIBmbXUiZQmeV+OCvf1hmZx7XNM47lnjKFscvPvDYQhyFOYYtxIEvTNHLFkdhhxfcZYujsMYzbrLFUVhh1EIchQUeWogD35ihny2Owh4T3GeLK1uMcZstrrz+G/Em+6nrcHX/IrzY77TIXiCr7JW5zj4Sn2VSO8cS1pxNEfgpkzo4lbCmWdl7a1Vvr3HsHACr5CJWnhywpwAAAABJRU5ErkJggg==">`;
+    fullscreen(false);
 }
 
 const resume = () => {
     startTimer();
     isPaused = false;
     pauseBtn.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAX0lEQVR4nO2WQQqAQAwD53ku/v8D1n9EBAUpFDwURM1AbiELpQ0L5s/MwAroUACj0V8Sl5BTS6O/RIW6/CV+WB51wssln9NdXCBygSRcIHpdgcRTX5+RwvaQqdFvPs4Gyhr/h1qOuFIAAAAASUVORK5CYII=">`;
+    fullscreen();
 }
 
 const pauseResume = () => {
@@ -257,3 +250,86 @@ const pauseResume = () => {
         pause();
     }
 }
+
+// ask user for fullscreen
+let fullscreen = (open = true) => {
+    if (document.fullscreenElement === null && open) {
+        document.documentElement.requestFullscreen();
+    }
+    
+    if (!open) {
+        document.exitFullscreen();
+    }
+}
+
+// get start-btn
+let startBtn = document.querySelector("#start-btn");
+
+// add event listener
+startBtn.addEventListener("click", () => {
+    // ask for fullscreen
+    fullscreen();
+
+    // show test-container
+    testContainer.style.display = "flex";
+    // hide start-btn
+    startBtn.style.display = "none";
+    // start test
+    nextQuestion();
+});
+
+// all media and load them (images and audios)
+const assetsLoader = (callback,progress) => {
+
+    // get all images
+    let images = [];
+
+    // get all audios
+    let audios = [];
+
+    serie.questions.forEach((question) => {
+        if (question.img !== "") {
+            images.push(question.img);
+        }
+        if (question.audio !== "") {
+            audios.push(question.audio);
+        }
+    });
+
+    let total = images.length + audios.length;
+
+    let loaded = 0;
+
+    let check = () => {
+        loaded++;
+        progress(loaded,total);
+        if (loaded >= total) {
+            callback();
+        }
+    }
+
+    images.forEach((img) => {
+        let image = new Image();
+        image.src = img;
+        image.onload = check;
+    });
+
+    audios.forEach((audio) => {
+        let audioElement = new Audio();
+        audioElement.src = audio;
+        audioElement.onloadeddata = check;
+    });
+
+}
+
+// get #progress-bar and ##progress
+let progressBarElement = document.querySelector("#progress-bar");
+let progressValElement = document.querySelector("#progress");
+assetsLoader(()=>{
+    console.log("All assets loaded");
+},(loaded,total)=>{
+    console.log(`${loaded}/${total}`);
+    let percent = (loaded/total)*100;
+    progressBarElement.style.width = `${percent}%`;
+    progressValElement.innerHTML = `${percent}%`;
+});

@@ -354,11 +354,41 @@ body {
     border-radius: 5px;
     cursor: pointer;
     border: none;
+    position: relative;
 }
 
 #start-btn:hover {
-    background-color: rgb(34, 79, 227);
+    background-color: rgb(10, 24, 71);
 }
+
+#start-btn #progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: rgb(23, 159, 75);
+    border-radius: 5px;
+    z-index: 0;
+}
+
+#progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-size: 20px;
+}
+
+#progress-text #progress {
+    margin-right: 10px;
+}
+
 
 #collecting-data {
     font-size: 17px;
