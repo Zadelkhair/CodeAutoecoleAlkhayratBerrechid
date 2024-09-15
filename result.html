@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <title>Title</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -19,23 +20,41 @@
 
     <div class="app">
 
-      <div class="result-container">
+      <div class="test-container">
         <div id="user-wrong-answers" class="user-wrong-answers">
 
         </div>
-        <div class="result-header">
-          serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - resulta <span
-            id="result">--/--</span>
+        <div class="test-header">
+          <div class="test-header-content">
+
+            <a id="home-btn" href="./index.html">
+              MENU
+            </a>
+
+            <a id="history-btn" href="./history.html">
+              HISTORIQUE
+            </a>
+
+            <div class="test-info">
+              serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - resultat <span
+                id="result">--/--</span>
+            </div>
+
+          </div>
         </div>
-        <div class="result-body">
-          <div class="result-media">
+        <div class="test-body">
+          <div class="test-media">
             <img id="result-media" src="" />
           </div>
-          <div class="result-controls">
+          <div class="test-controls">
             <div class="result-answer-display" id="answer-display1"></div>
             <div class="result-answer-display" id="answer-display2"></div>
-            <button class="btn-correction" onclick="prev()">prev</button>
-            <button class="btn-valider" onclick="next()">suiv</button>
+            <button class="btn-correction" onclick="prev()">
+              precedent
+            </button>
+            <button class="btn-valider" onclick="next()">
+              suivant
+            </button>
           </div>
         </div>
 

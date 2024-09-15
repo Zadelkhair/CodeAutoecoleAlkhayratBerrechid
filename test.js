@@ -8,23 +8,60 @@ let qustionNumElement = document.querySelector("#qustion-num");
 let timerElement = document.querySelector("#timer");
 let answerDisplayElement = document.querySelector("#answer-display");
 let answerButtons = document.querySelectorAll("#test-answers > button");    
+let pauseBtn = document.querySelector("#pause-btn");
 
 let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
 let seriesNum = urlParams.get("series");
 let index = urlParams.get("index");
+let examen = urlParams.get("examen");
 
-if (seriesNum === null || index === null) {
+let history = JSON.parse(localStorage.getItem("history"))??[];
+
+if ((seriesNum === null || index === null) && examen === null) {
     window.location.href = "series.html";
 }
 
 // if length of series is less than index
-if (database.series.length <= index) {
+if (database.series.length <= index && examen === null) {
     window.location.href = "series.html";
 }
 
-let serie = database.series[index];
-serieNumElement.innerHTML = seriesNum;
+let serie = null;
+
+if(examen !== null){
+    // serie = database.examen[examen];
+
+    // randomize 40 questions from all series without repetition
+    let questions = [];
+    let allQuestions = [];
+    database.series.forEach((serie) => {
+        allQuestions = allQuestions.concat(serie.questions);
+    });
+
+    while (questions.length < 40) {
+        let randomIndex = Math.floor(Math.random() * allQuestions.length);
+        if (!questions.includes(allQuestions[randomIndex])) {
+            questions.push(allQuestions[randomIndex]);
+        }
+    }
+
+    // update serie numbers 
+    questions.forEach((question, index) => {
+        question.num = index + 1;
+    });
+
+    serie = {
+        questions
+    };
+
+    serieNumElement.innerHTML = "Examen";
+}
+else {
+    serie = database.series[index];
+    serieNumElement.innerHTML = seriesNum;
+}
+
 
 if (serie === undefined) {
     window.location.href = "series.html";
@@ -84,6 +121,32 @@ let validate = () => {
     // save to local storage
     localStorage.setItem(`userAnswers-${ID}`, JSON.stringify(userAnswers));
 
+    // check if userAnswers-<ID> is in history
+    let historyIndex = history.findIndex((item) => item.id === ID);
+    if (historyIndex === -1) {
+        history.push({
+            id: ID, 
+            series: examen !== null ? "examen" : seriesNum,
+            index: index,
+            result: userAnswers.filter((answer) => answer.isCorrect).length,
+            total: userAnswers.length,
+            date: new Date().toLocaleString(),
+            userAnswers
+        });
+        localStorage.setItem("history", JSON.stringify(history));
+    } else {
+        history[historyIndex] = {
+            id: ID, 
+            series: examen !== null ? "examen" : seriesNum,
+            index: index,
+            result: userAnswers.filter((answer) => answer.isCorrect).length,
+            total: userAnswers.length,
+            date: new Date().toLocaleString(),
+            userAnswers,
+        };
+        localStorage.setItem("history", JSON.stringify(history));
+    }
+
     nextQuestion();
 }
 
@@ -118,7 +181,12 @@ let nextQuestion = () => {
         // end of questions
         clearInterval(timerInterval);
         // redirect to result page
-        window.location.href = `result.html?series=${seriesNum}&index=${index}&id=${ID}`;
+        if(examen !== null){
+            window.location.href = `result.html?examen=true&id=${ID}`;
+        }
+        else {
+            window.location.href = `result.html?series=${seriesNum}&index=${index}&id=${ID}`;
+        }
         return;
     }
 
@@ -173,11 +241,17 @@ const pause = () => {
     clearInterval(timerInterval);
     currentAudio.pause();
     isPaused = true;
+    pauseBtn.innerHTML = "▶︎";
+    pauseBtn.style.fontSize = "16px";
+    pauseBtn.style.paddingLeft = "8px";
 }
 
 const resume = () => {
     startTimer();
     isPaused = false;
+    pauseBtn.innerHTML = "⏸︎";
+    pauseBtn.style.fontSize = "25px";
+    pauseBtn.style.paddingLeft = "6px";
 }
 
 const pauseResume = () => {

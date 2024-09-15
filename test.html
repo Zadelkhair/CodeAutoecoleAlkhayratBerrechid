@@ -23,8 +23,24 @@
 
       <div class="test-container">
         <div class="test-header">
-          serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - <span
-            id="timer">--</span> sec
+          <div class="test-header-content" >
+            
+            <a id="home-btn" href="./index.html">
+              MENU
+            </a>
+
+            <a id="history-btn" href="./history.html">
+              HISTORIQUE
+            </a>
+
+            <div class="test-info" >
+              serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - <span
+              id="timer">--</span> sec <button 
+                id="pause-btn" onclick="pauseResume()"
+              >⏸︎</button>
+            </div>
+            
+          </div>
         </div>
         <div class="test-body">
           <div class="test-media">
@@ -35,10 +51,7 @@
             </div>
 
             <div id="collecting-data" style="display: none;">
-              <button
-                id="cd-next-btn"
-                onclick="prev()"
-              >
+              <button id="cd-next-btn" onclick="prev()">
                 prev
               </button>
               <!-- 4 checkbox -->
@@ -50,13 +63,10 @@
               <label for="check3">3</label>
               <input type="checkbox" id="check4" name="check4" value="4">
               <label for="check4">4</label>
-              <button
-                id="cd-prev-btn"
-                onclick="next()"
-              >
+              <button id="cd-prev-btn" onclick="next()">
                 suiv
               </button>
-              <br/>
+              <br />
               <!-- <button onclick="pauseResume()">pause</button> -->
             </div>
 
@@ -80,7 +90,7 @@
 
     <script src="./test.js"></script>
 
-    <script src="./collecting-data.js"></script>
+    <!-- <script src="./collecting-data.js"></script> -->
 
 </body>
 

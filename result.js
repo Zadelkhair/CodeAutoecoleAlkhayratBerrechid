@@ -10,13 +10,19 @@ let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
 let id = urlParams.get("id");
 let seriesNum = urlParams.get("series");
+let examen = urlParams.get("examen");
 
-if (id === null || seriesNum === null) {
-    window.location.href = "series.html";
+if ((id === null || seriesNum === null) && (examen === null || id === null )) {
+    window.location.href = "index.html";
 }
 
 // set serie num
-serieNumElement.innerHTML = seriesNum;
+if (examen !== null) {
+    serieNumElement.innerHTML = "Examen";
+}
+else {
+    serieNumElement.innerHTML = seriesNum;
+}
 
 // get local storage user answers
 let userAnswers = JSON.parse(localStorage.getItem("userAnswers-" + id));
@@ -98,18 +104,18 @@ const goTo = (answerNum) => {
 }
 
 next = () => {
-    currentAnswers++;
-    if (currentAnswers >= userAnswers.length) {
+    if (currentAnswers+1 >= userAnswers.length) {
         return;
     }
+    currentAnswers++;
     goTo(currentAnswers);
 }
 
 prev = () => {
-    currentAnswers--;
-    if (currentAnswers < 0) {
+    if (currentAnswers-1 < 0) {
         return;
     }
+    currentAnswers--;
     goTo(currentAnswers);
 }
 
