@@ -197,8 +197,17 @@ app.post('/push-to-github', async (req, res) => {
         // Use the GitHub credentials
         const remoteRepo = `https://${githubToken}@github.com/${process.env.GITHUB_USERNAME}/${process.env.GITHUB_REPO}.git`;
 
-        // Perform git add, commit
-        await git.add('./*');
+        git.outputHandler((command, stdout, stderr) => {
+            stdout.on('data', (data) => {
+                const message = data.toString();
+                console.log('Progress:', message); // Log progress to the console
+            });
+        });
+
+        // Add all changes to the staging area
+        await git.add('./*');  // Stages all files (including server.js)
+
+        // Commit changes
         await git.commit('Synced to docs - ' + new Date().toLocaleString());
 
         // If you have an SSH key, set it up for the push
