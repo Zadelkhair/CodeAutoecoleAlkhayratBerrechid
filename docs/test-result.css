@@ -175,6 +175,18 @@ body {
     border: none;
 }
 
+.btn-commets {
+    width: 100%;
+    height: 50px;
+    background-color: rgb(87, 87, 87);
+    color: #ffffff;
+    font-size: 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
 .result-container {
     width: 100%;
     height: 100%;
@@ -471,6 +483,12 @@ body {
 
 .test-answer-display {
     display: none;
+}
+
+.grid-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
 }
 
 /* if size less than 768 */

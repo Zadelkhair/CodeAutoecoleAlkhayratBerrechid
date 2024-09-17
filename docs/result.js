@@ -113,8 +113,7 @@ const goTo = (answerNum) => {
     // set question number
     qustionNumElement.innerHTML = answerNum + 1;
 
-    // set comment section // serie-question
-    commentSectionElement.innerHTML = commentSection(`Comment@S${seriesNum}@Q${question.num}`);
+    commentSection(`Comment@S${seriesNum}@Q${question.num}`);
 
 }
 
