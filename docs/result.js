@@ -143,11 +143,8 @@ const explication = () => {
 }
 
 const commentSection = (id) => {
-    // Remove any existing Giscus iframe to avoid duplication
-    const existingGiscus = document.querySelector("iframe.giscus-frame");
-    if (existingGiscus) {
-        existingGiscus.remove();
-    }
+    // Clear any existing Giscus iframe to avoid duplication
+    commentSectionElement.innerHTML = ''; // Clear previous content
 
     // Create the Giscus script element
     const script = document.createElement('script');
@@ -162,14 +159,14 @@ const commentSection = (id) => {
     script.setAttribute('data-reactions-enabled', "1");
     script.setAttribute('data-emit-metadata', "1");
     script.setAttribute('data-input-position', "bottom");
-    script.setAttribute('data-theme', "dark");
+    script.setAttribute('data-theme', "light");
     script.setAttribute('data-lang', "en");
     script.setAttribute('crossorigin', "anonymous");
     script.async = true;
 
     // Append the script to the comment section element
-    commentSectionElement.innerHTML = ''; // Clear previous content
     commentSectionElement.appendChild(script);
 };
+
 
 next();
