@@ -12,6 +12,8 @@ let id = urlParams.get("id");
 let seriesNum = urlParams.get("series");
 let examen = urlParams.get("examen");
 
+const currentAudio = new Audio();
+
 if ((id === null || seriesNum === null) && (examen === null || id === null )) {
     window.location.href = "index.html";
 }
@@ -59,7 +61,6 @@ for (let i = 0; i < wrongAnswers.length; i++) {
     userWrongAnswersElement.appendChild(btn);
 }
 
-
 console.log(userAnswers);
 
 let currentAnswers = -1;
@@ -98,6 +99,16 @@ const goTo = (answerNum) => {
     // set image
     imgTestElement.src = question.img;
 
+    // if question has audio explanation display btn-explication
+    if (question.audio_explination) {
+        document.querySelector("#btn-explication").style.display = "block";
+    } else {
+        document.querySelector("#btn-explication").style.display = "none";
+    }
+
+    // clear audio
+    currentAudio.src = "";
+
     // set question number
     qustionNumElement.innerHTML = answerNum + 1;
 
@@ -117,6 +128,14 @@ prev = () => {
     }
     currentAnswers--;
     goTo(currentAnswers);
+}
+
+// explication
+const explication = () => {
+    if(userAnswers[currentAnswers].question.audio_explination) {
+        currentAudio.src = userAnswers[currentAnswers].question.audio_explination;
+        currentAudio.play();
+    }
 }
 
 next();
