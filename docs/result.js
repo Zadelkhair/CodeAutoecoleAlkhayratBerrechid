@@ -15,7 +15,7 @@ let examen = urlParams.get("examen");
 
 const currentAudio = new Audio();
 
-if ((id === null || seriesNum === null) && (examen === null || id === null )) {
+if ((id === null || seriesNum === null) && (examen === null || id === null)) {
     window.location.href = "index.html";
 }
 
@@ -119,7 +119,7 @@ const goTo = (answerNum) => {
 }
 
 next = () => {
-    if (currentAnswers+1 >= userAnswers.length) {
+    if (currentAnswers + 1 >= userAnswers.length) {
         return;
     }
     currentAnswers++;
@@ -127,7 +127,7 @@ next = () => {
 }
 
 prev = () => {
-    if (currentAnswers-1 < 0) {
+    if (currentAnswers - 1 < 0) {
         return;
     }
     currentAnswers--;
@@ -136,31 +136,40 @@ prev = () => {
 
 // explication
 const explication = () => {
-    if(userAnswers[currentAnswers].question.audio_explination) {
+    if (userAnswers[currentAnswers].question.audio_explination) {
         currentAudio.src = userAnswers[currentAnswers].question.audio_explination;
         currentAudio.play();
     }
 }
 
 const commentSection = (id) => {
-    return `
-        <script src="https://giscus.app/client.js"
-                data-repo="Zadelkhair/CodeAutoecoleAlkhayratBerrechid"
-                data-repo-id="R_kgDOMxcxrw"
-                data-category="General"
-                data-category-id="DIC_kwDOMxcxr84CiiN0"
-                data-mapping="specific"
-                data-term="${id}"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="1"
-                data-input-position="bottom"
-                data-theme="dark"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
-    `;
-}
+    // Remove any existing Giscus iframe to avoid duplication
+    const existingGiscus = document.querySelector("iframe.giscus-frame");
+    if (existingGiscus) {
+        existingGiscus.remove();
+    }
+
+    // Create the Giscus script element
+    const script = document.createElement('script');
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute('data-repo', "Zadelkhair/CodeAutoecoleAlkhayratBerrechid");
+    script.setAttribute('data-repo-id', "R_kgDOMxcxrw");
+    script.setAttribute('data-category', "General");
+    script.setAttribute('data-category-id', "DIC_kwDOMxcxr84CiiN0");
+    script.setAttribute('data-mapping', "specific");
+    script.setAttribute('data-term', id); // Unique ID for each question's comment section
+    script.setAttribute('data-strict', "0");
+    script.setAttribute('data-reactions-enabled', "1");
+    script.setAttribute('data-emit-metadata', "1");
+    script.setAttribute('data-input-position', "bottom");
+    script.setAttribute('data-theme', "dark");
+    script.setAttribute('data-lang', "en");
+    script.setAttribute('crossorigin', "anonymous");
+    script.async = true;
+
+    // Append the script to the comment section element
+    commentSectionElement.innerHTML = ''; // Clear previous content
+    commentSectionElement.appendChild(script);
+};
 
 next();
