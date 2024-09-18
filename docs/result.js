@@ -72,6 +72,8 @@ const goTo = (answerNum) => {
         return;
     }
 
+    currentAnswers = answerNum;
+
     let userAnswer = userAnswers[answerNum].userAnswer;
     let isCorrect = userAnswers[answerNum].isCorrect;
     let question = userAnswers[answerNum].question;
