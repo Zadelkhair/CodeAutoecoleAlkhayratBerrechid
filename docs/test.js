@@ -1,4 +1,3 @@
-
 // generate random number
 let ID = Math.floor(Math.random() * 1000000);
 
@@ -177,6 +176,7 @@ const clearAnswer = () => {
 }
 
 let nextQuestion = () => {
+
     currentQuestion++;
     if (currentQuestion >= serie.questions.length) {
         // end of questions
@@ -194,6 +194,7 @@ let nextQuestion = () => {
     }
 
     resetTimer();
+    
     clearAnswer();
 
     let question = serie.questions[currentQuestion];
@@ -251,62 +252,36 @@ const pauseResume = () => {
     }
 }
 
-// ask user for fullscreen
+// Fix fullscreen for iOS
 let fullscreen = (open = true) => {
-    if (document.fullscreenElement === null && open) {
-        document.documentElement.requestFullscreen();
+    const docEl = document.documentElement;
+    const requestFullscreen = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+    const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+
+    if (open && !document.fullscreenElement) {
+        if (requestFullscreen) requestFullscreen.call(docEl);
+    } else if (!open && document.fullscreenElement) {
+        if (exitFullscreen) exitFullscreen.call(document);
     }
-    
-    if (!open) {
-        document.exitFullscreen();
-    }
-}
+};
 
-// get start-btn
-let startBtn = document.querySelector("#start-btn");
-
-// add event listener
-startBtn.addEventListener("click", () => {
-    // ask for fullscreen
-    fullscreen();
-
-    // show test-container
-    testContainer.style.display = "flex";
-    // hide start-btn
-    startBtn.style.display = "none";
-    // start test
-    nextQuestion();
-});
-
-// all media and load them (images and audios)
-const assetsLoader = (callback,progress) => {
-
-    // get all images
+// Ensure audio files are preloaded and autoplay works
+const assetsLoader = (callback, progress) => {
     let images = [];
-
-    // get all audios
     let audios = [];
-
     serie.questions.forEach((question) => {
-        if (question.img !== "") {
-            images.push(question.img);
-        }
-        if (question.audio !== "") {
-            audios.push(question.audio);
-        }
+        if (question.img !== "") images.push(question.img);
+        if (question.audio !== "") audios.push(question.audio);
     });
 
     let total = images.length + audios.length;
-
     let loaded = 0;
 
-    let check = () => {
+    const check = () => {
         loaded++;
-        progress(loaded,total);
-        if (loaded >= total) {
-            callback();
-        }
-    }
+        progress(loaded, total);
+        if (loaded >= total) callback();
+    };
 
     images.forEach((img) => {
         let image = new Image();
@@ -317,10 +292,84 @@ const assetsLoader = (callback,progress) => {
     audios.forEach((audio) => {
         let audioElement = new Audio();
         audioElement.src = audio;
+        audioElement.preload = "auto"; // Preload audio
         audioElement.onloadeddata = check;
     });
+};
 
-}
+// Play audio automatically with user interaction
+const playAudio = (audioSrc) => {
+    currentAudio.src = audioSrc;
+    currentAudio.load();
+    currentAudio.play().catch((err) => {
+        console.warn("Autoplay failed. User interaction required:", err);
+    });
+};
+
+// get start-btn
+let startBtn = document.querySelector("#start-btn");
+
+// add event listener
+startBtn.addEventListener("click", () => {
+    // ask for fullscreen
+    fullscreen();
+
+    // check if safari
+    // if (navigator.userAgent.indexOf("Safari") > -1) {
+    //     alert("Please enable autoplay for audio in Safari settings to hear the questions.");
+    // }
+
+    // show test-container
+    testContainer.style.display = "flex";
+    // hide start-btn
+    startBtn.style.display = "none";
+    // start test
+    nextQuestion();
+});
+
+// all media and load them (images and audios)
+// const assetsLoader = (callback,progress) => {
+
+//     // get all images
+//     let images = [];
+
+//     // get all audios
+//     let audios = [];
+
+//     serie.questions.forEach((question) => {
+//         if (question.img !== "") {
+//             images.push(question.img);
+//         }
+//         if (question.audio !== "") {
+//             audios.push(question.audio);
+//         }
+//     });
+
+//     let total = images.length + audios.length;
+
+//     let loaded = 0;
+
+//     let check = () => {
+//         loaded++;
+//         progress(loaded,total);
+//         if (loaded >= total) {
+//             callback();
+//         }
+//     }
+
+//     images.forEach((img) => {
+//         let image = new Image();
+//         image.src = img;
+//         image.onload = check;
+//     });
+
+//     audios.forEach((audio) => {
+//         let audioElement = new Audio();
+//         audioElement.src = audio;
+//         audioElement.onloadeddata = check;
+//     });
+
+// }
 
 // get #progress-bar and ##progress
 let progressBarElement = document.querySelector("#progress-bar");
