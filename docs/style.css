@@ -11,8 +11,6 @@ html, body {
     height: 100vh;
 }    
 .app {
-    padding: 20px;
-    /* overflow: hidden; */
     width: 100%;
 }
 .header {
