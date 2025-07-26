@@ -256,3 +256,64 @@ html, body {
     font-size: 18px;
     text-decoration: none;
 }
+
+.supplementary-training {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.supplementary-training h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.supplementary-training form {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: right;
+    direction: rtl;
+}
+
+.supplementary-training label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.supplementary-training input,
+.supplementary-training textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: right;
+}
+
+.supplementary-training input[type="date"] {
+    display: inline-block;
+    margin-inline-end: 10px;
+}
+
+.supplementary-training .whatsapp-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #25d366;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.supplementary-training .whatsapp-btn:hover {
+    background-color: #1da851;
+}

@@ -24,6 +24,11 @@
     <meta name="twitter:image" content="./logo.png">
 
     <link rel="stylesheet" href="./style.css" />
+    <style>
+      .container {
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -36,8 +41,9 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <h1>تعلم القيادة بسهولة مع كود الخيرات</h1>
-                <p>انضم إلى أفضل مدرسة تعليم السياقة في برشيد واجتز امتحانك بثقة.</p>
+                 <!-- تعلم قانون السير -->
+                <h1>تعلم قانون السير بسهولة مع كود الخيرات</h1>
+                  <p>انضم إلى مدرسة تعليم السياقة الخيرات من بين الافضل في برشيد واجتز امتحانك بثقة.</p>
                 <!-- start a serie -->
                  <a href="series.html" class="cta-btn">ابدأ سلسلة جديدة</a>
                 <a href="https://wa.me/212662855677?text=السلام عليكم، أود الاستفسار عن خدماتكم." class="whatsapp-btn" target="_blank">واتساب</a>
@@ -61,6 +67,24 @@
                     <p>تتبع تقدمك وتحسن مع الوقت.</p>
                 </a>
             </div>
+        </section>
+
+        <!-- Supplementary Training Section -->
+        <section class="supplementary-training">
+            <h2>ساعات تدريب إضافية</h2>
+            <form id="training-form" dir="rtl">
+                <label for="hours">عدد الساعات:</label>
+                <input type="number" id="hours" name="hours" min="1" max="10" placeholder="أدخل عدد الساعات" required>
+                
+                <label for="date-range">الفترة الزمنية:</label>
+                <input type="date" id="start-date" name="start-date" required>
+                <input type="date" id="end-date" name="end-date" required>
+                
+                <label for="message">رسالة:</label>
+                <textarea id="message" name="message" rows="4">أرغب في حجز ساعات تدريب إضافية. شكراً.</textarea>
+                
+                <button type="button" class="whatsapp-btn" onclick="sendToWhatsApp()">إرسال عبر واتساب</button>
+            </form>
         </section>
 
         <!-- Footer -->
@@ -96,6 +120,24 @@
     <script>
       // Additional custom scripts can be added here
       console.log('Page loaded successfully');
+
+      function sendToWhatsApp() {
+        const hours = document.getElementById('hours').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const message = document.getElementById('message').value;
+        let whatsappMessage = `${message}\n`;
+
+        if (hours) {
+            whatsappMessage += `عدد الساعات: ${hours}\n`;
+        }
+        if (startDate && endDate) {
+            whatsappMessage += `الفترة الزمنية: من ${startDate} إلى ${endDate}`;
+        }
+
+        const whatsappURL = `https://wa.me/212662855677?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappURL, '_blank');
+      }
     </script>
   </body>
 </html>
