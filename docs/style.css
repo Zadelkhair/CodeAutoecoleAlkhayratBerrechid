@@ -336,6 +336,8 @@ html, body {
     margin: 0 auto;
     text-align: right;
     direction: rtl;
+    display: flex;
+    flex-direction: column;
 }
 
 .thank-you textarea {
