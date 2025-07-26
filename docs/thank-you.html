@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <title>شكرًا لك - كود الخيرات</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="شكرًا لك على تقديم معلوماتك. سنتصل بك قريبًا.">
+    <meta name="keywords" content="شكرًا لك, كود الخيرات, مدرسة تعليم السياقة, برشيد, autoecole, maroc, driving school">
+    <meta name="author" content="Code Alkhayrat">
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="./logo.png" alt="شعار كود الخيرات" />
+            <a href="index.html" class="home-btn">الصفحة الرئيسية</a>
+        </header>
+
+        <!-- Thank You Section -->
+        <section class="thank-you">
+            <h2>شكرًا لك!</h2>
+            <p>لقد استلمنا معلوماتك. سنتصل بك في أقرب وقت ممكن.</p>
+            <p>إذا كنت ترغب في إضافة أي ملاحظات أو استفسارات، يمكنك كتابتها أدناه وإرسالها عبر واتساب.</p>
+            <form id="thank-you-form">
+                <label for="additional-message">رسالتك:</label>
+                <textarea id="additional-message" name="additional-message" rows="4" placeholder="اكتب رسالتك هنا..."></textarea>
+                <button type="button" class="whatsapp-btn" onclick="sendToWhatsApp()">إرسال عبر واتساب</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      function sendToWhatsApp() {
+        const message = document.getElementById('additional-message').value;
+        const whatsappMessage = message ? `رسالة إضافية: ${message}` : 'رسالة إضافية: لا توجد رسالة.';
+        const whatsappURL = `https://wa.me/212662855677?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappURL, '_blank');
+      }
+    </script>
+  </body>
+</html>

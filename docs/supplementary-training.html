@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <title>ساعات تدريب إضافية - كود الخيرات</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="صفحة ساعات تدريب إضافية لمدرسة تعليم السياقة كود الخيرات.">
+    <meta name="keywords" content="ساعات تدريب إضافية, مدرسة تعليم السياقة, برشيد, كود الخيرات, autoecole, maroc, driving school">
+    <meta name="author" content="Code Alkhayrat">
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="./logo.png" alt="شعار كود الخيرات" />
+            <a href="index.html" class="home-btn">الصفحة الرئيسية</a>
+        </header>
+
+        <!-- Supplementary Training Section -->
+        <section class="supplementary-training">
+            <h2>ساعات تدريب إضافية</h2>
+            <form id="training-form">
+                <label for="hours">عدد الساعات:</label>
+                <input type="number" id="hours" name="hours" min="1" max="10" placeholder="أدخل عدد الساعات" required>
+                
+                <label for="date-range">الفترة الزمنية:</label>
+                <input type="date" id="start-date" name="start-date" required>
+                <input type="date" id="end-date" name="end-date" required>
+                
+                <label for="message">رسالة:</label>
+                <textarea id="message" name="message" rows="4">أرغب في حجز ساعات تدريب إضافية. شكراً.</textarea>
+                
+                <button type="button" class="whatsapp-btn" onclick="sendToWhatsApp()">إرسال عبر واتساب</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      function sendToWhatsApp() {
+        const hours = document.getElementById('hours').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const message = document.getElementById('message').value;
+        let whatsappMessage = `${message}\n`;
+
+        if (hours) {
+            whatsappMessage += `عدد الساعات: ${hours}\n`;
+        }
+        if (startDate && endDate) {
+            whatsappMessage += `الفترة الزمنية: من ${startDate} إلى ${endDate}`;
+        }
+
+        const whatsappURL = `https://wa.me/212662855677?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappURL, '_blank');
+      }
+    </script>
+  </body>
+</html>
