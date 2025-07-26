@@ -81,10 +81,10 @@ html, body {
     color: #fff;
     text-align: right;
     padding: 20px 30px;
-    margin: 0 10px;
+    margin: 10px 20px;
     border-radius: 30px;
     height: 70vh;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -128,6 +128,12 @@ html, body {
     display: inline-block;
     text-decoration: none;
     margin-inline-end: 15px;
+}
+
+.hero .cta-btn {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    /* border: 1px solid white; */
 }
 
 .hero .cta-btn:hover {
@@ -227,8 +233,8 @@ html, body {
 
 
 .start-btn {
-    background-color: #f9ce40;
-    color: rgb(0, 0, 0);
+    background-color: #000000;
+    color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
