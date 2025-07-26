@@ -136,9 +136,6 @@ html, body {
     /* border: 1px solid white; */
 }
 
-.hero .cta-btn:hover {
-    background-color: #e0b837;
-}
 
 .hero .whatsapp-btn {
     background-color: #25d366;
@@ -227,9 +224,6 @@ html, body {
     text-decoration: none;
 }
 
-.footer a:hover {
-    text-decoration: underline;
-}
 
 
 .start-btn {
@@ -242,9 +236,6 @@ html, body {
     font-size: 18px;
 }
 
-.start-btn:hover {
-    background-color: #e0b837;
-}
 
 .home-btn {
     background-color: #000000;
@@ -295,6 +286,7 @@ html, body {
     border-radius: 5px;
     font-size: 14px;
     text-align: right;
+    flex: 1;
 }
 
 .supplementary-training input[type="date"] {
