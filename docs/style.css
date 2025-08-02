@@ -77,22 +77,32 @@ html, body {
 }
 
 .hero {
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.49), rgba(0, 0, 0, 0)), url(./image.png) no-repeat center center / cover;
+    position: relative;
     color: #fff;
     text-align: right;
     padding: 20px 30px;
     margin: 10px 20px;
     border-radius: 30px;
     height: 70vh;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* z-index: -1; */
+    filter: brightness(0.7);
 }
 
 @media (max-width: 768px) {
     .hero {
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0.5)), url(./image-sm.png) no-repeat center center / cover;
         text-align: center;
         align-items: center;
     }
@@ -100,6 +110,7 @@ html, body {
 
 .hero-content {
     max-width: 600px;
+    z-index: 1;
 }
 
 .hero h1 {
