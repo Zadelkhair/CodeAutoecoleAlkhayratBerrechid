@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دروس مدرسة تعليم السياقة</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="marked.min.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <h2>قائمة الدروس</h2>
+      <hr />
+      <div class="lesson-nav" id="lesson-nav"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <button class="sidebar-open-btn" onclick="toggleSidebar()">☰</button>
+      <!-- <h1>دروس مدرسة تعليم السياقة</h1> -->
+      <div id="content">اختر درسًا لعرضه هنا...</div>
+    </main>
+  </div>
+
+  <script src="lesson-list.js"></script>
+  <script>
+    const nav = document.getElementById("lesson-nav");
+    let activeLink = null;
+
+    lessonList.forEach(({ title, file }) => {
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = title;
+      link.onclick = () => {
+        if (activeLink) activeLink.classList.remove("active");
+        link.classList.add("active");
+        activeLink = link;
+        loadLesson(file);
+      };
+      nav.appendChild(link);
+    });
+
+    function loadLesson(file) {
+      fetch("lessons/" + file)
+        .then((res) => res.text())
+        .then((md) => {
+          document.getElementById("content").innerHTML = marked.parse(md);
+        });
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("open");
+    }
+  </script>
+</body>
+</html>

@@ -386,23 +386,40 @@ html, body {
 }
 
 .ribbon {
+    display: flex;
     position: sticky;
     top: 0;
     left: 0;
-    width: 100%;
     background-color: #ffcc00;
     color: #000;
     text-align: center;
     padding: 10px 20px;
-    font-size: 16px;
     font-weight: bold;
     z-index: 1000;
+    overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .ribbon p {
     margin: 0;
-    display: inline-block;
+    display: flex;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    padding: 0;
+}
+
+/* mobile styles */
+@media (max-width: 768px) {
+    .ribbon p {
+        font-size: 13px;
+    }
+
+    .ribbon-close-btn {
+        font-size: 18px;
+    }
 }
 
 .ribbon-close-btn {
@@ -412,10 +429,6 @@ html, body {
     font-weight: bold;
     color: #000;
     cursor: pointer;
-    margin-left: 15px;
-    position: absolute;
-    right: 20px;
-    top: 10px;
 }
 
 .ribbon-close-btn:hover {
