@@ -53,6 +53,14 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P9DLMBTJ" height="0" width="0"
         style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    
+    <!-- Ribbon -->
+    <div id="top-ribbon" class="ribbon">
+        <!-- <p>قريباً: جميع سلسلة امتحان السياقة مع الشرح!</p> -->
+        <p>قريباً: جميع سلاسل امتحان السياقة مع الشرح والتصحيح، ودروس منظمة من الألف إلى الياء.</p>
+        <button class="ribbon-close-btn" onclick="closeRibbon()">×</button>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -160,6 +168,10 @@
 
         const whatsappURL = `https://wa.me/212662855677?text=${encodeURIComponent(whatsappMessage)}`;
         window.open(whatsappURL, '_blank');
+      }
+
+      function closeRibbon() {
+        document.getElementById('top-ribbon').style.display = 'none';
       }
     </script>
   </body>
