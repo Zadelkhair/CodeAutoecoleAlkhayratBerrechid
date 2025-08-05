@@ -199,7 +199,8 @@
 
       // check if there is a param without_login
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('without_login')) {
+      // withoutLogin
+      if (urlParams.has('without_login') || localStorage.getItem('withoutLogin') === 'true') {
         withoutLogin = true;
       }
 
@@ -217,15 +218,17 @@
         startNow();
       }
     }
-    
-    // if user clicks on 'enter' key
+
+    // if user clicks on 'a' twice
+    let aKeyCount = 0;
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission
-        // add without_login param to url
-        const url = new URL(window.location.href);
-        url.searchParams.set('without_login', 'true');
-        window.history.pushState({}, '', url);
+      if (event.key === 'g') {
+        aKeyCount++;
+        if (aKeyCount === 3) {
+          // save aKeyCount to localStorage
+          localStorage.setItem('withoutLogin', 'true');
+          alert('تم تفعيل وضع الضيف. يمكنك الآن الوصول إلى المحتوى دون تسجيل الدخول.');
+        }
       }
     });
 
