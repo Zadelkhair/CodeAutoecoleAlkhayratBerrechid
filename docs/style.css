@@ -265,7 +265,7 @@ html, body {
         padding: 12px 15px;
     }
     .start-btn {
-        display: none;
+        display: none!important;
     }
     .start-btn2 {
         display: block;
@@ -274,6 +274,8 @@ html, body {
         font-size: 11px!important;
         padding: 10px 15px;
         text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 }
 
