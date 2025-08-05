@@ -225,6 +225,15 @@
       if (event.key === 'g') {
         aKeyCount++;
         if (aKeyCount === 3) {
+
+          // check if withoutLogin is already set
+          if (localStorage.getItem('withoutLogin') === 'true') {
+            // deactivate withoutLogin
+            localStorage.removeItem('withoutLogin');
+            alert('تم إلغاء وضع الضيف. يجب تسجيل الدخول للوصول إلى المحتوى.');
+            return;
+          }
+
           // save aKeyCount to localStorage
           localStorage.setItem('withoutLogin', 'true');
           alert('تم تفعيل وضع الضيف. يمكنك الآن الوصول إلى المحتوى دون تسجيل الدخول.');
