@@ -168,7 +168,7 @@
     gtag('js', new Date());
     gtag('config', 'UA-XXXXXXXXX-X');
   </script>
-  
+
   <script>
 
     function sendToWhatsApp() {
@@ -217,6 +217,18 @@
         startNow();
       }
     }
+    
+    // if user clicks on 'enter' key
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        // add without_login param to url
+        const url = new URL(window.location.href);
+        url.searchParams.set('without_login', 'true');
+        window.history.pushState({}, '', url);
+      }
+    });
+
   </script>
 
   <script type="module" src="./firebase.js"></script>
