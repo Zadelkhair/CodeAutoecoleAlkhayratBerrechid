@@ -265,7 +265,7 @@ html, body {
         padding: 12px 15px;
     }
     .start-btn {
-        display: none!important;
+        /* display: none!important; */
     }
     .start-btn2 {
         display: block;
