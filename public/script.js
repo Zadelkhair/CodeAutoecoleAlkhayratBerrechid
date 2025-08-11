@@ -591,3 +591,32 @@ document.getElementById('next-question-btn').addEventListener('click', async () 
         selectQuestionByIndex(currentQuestionIndex + 1);
     }
 });
+
+// Add event listener for "Remove Image" button
+document.getElementById('remove-image-btn').addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent triggering the image container click event
+    const img = document.getElementById('s-image');
+    img.src = ''; // Clear the image source
+    form.img = null; // Reset the form's image field
+});
+
+// Add drag-and-drop functionality for the image container
+const imageContainer = document.getElementById('s-image-container');
+imageContainer.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    imageContainer.style.backgroundColor = '#e9ecef'; // Highlight dropzone
+});
+imageContainer.addEventListener('dragleave', () => {
+    imageContainer.style.backgroundColor = ''; // Reset dropzone highlight
+});
+imageContainer.addEventListener('drop', (e) => {
+    e.preventDefault();
+    imageContainer.style.backgroundColor = ''; // Reset dropzone highlight
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const img = document.getElementById('s-image');
+        img.src = URL.createObjectURL(file); // Display the dropped image
+        form.img = img.src; // Update the form's image field
+    }
+});
