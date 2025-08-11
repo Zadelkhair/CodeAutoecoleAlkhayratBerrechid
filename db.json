@@ -12936,10 +12936,12 @@
         },
         {
           "num": 8,
-          "img": "assets/new_series/1754606082731_image.png",
-          "audio": "assets/new_series/1754606082731_audio.mp3",
+          "img": "assets/new_series/1754956257154_image.png",
+          "audio": "assets/new_series/1754956257155_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "2"
+          ]
         },
         {
           "num": 9,
