@@ -12474,10 +12474,12 @@
         },
         {
           "num": 40,
-          "img": "assets/new_series/1753655353981_image.png",
-          "audio": null,
+          "img": "assets/new_series/1754987900349_image.png",
+          "audio": "assets/new_series/1754987900350_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "2"
+          ]
         }
       ]
     },
