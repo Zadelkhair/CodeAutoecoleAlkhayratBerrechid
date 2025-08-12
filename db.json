@@ -385,9 +385,9 @@
       "questions": [
         {
           "num": 1,
-          "img": "assets/codeZakaria_2/Screenshot_1.jpg",
-          "audio": "assets/codeZakaria_2/audio/1.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991752081_image.png",
+          "audio": "assets/new_series/1754991752081_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "3"
@@ -395,9 +395,9 @@
         },
         {
           "num": 2,
-          "img": "assets/codeZakaria_2/Screenshot_2.jpg",
-          "audio": "assets/codeZakaria_2/audio/2.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991761246_image.png",
+          "audio": "assets/new_series/1754991761246_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3"
@@ -405,18 +405,18 @@
         },
         {
           "num": 3,
-          "img": "assets/codeZakaria_2/Screenshot_3.jpg",
-          "audio": "assets/codeZakaria_2/audio/3.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991766955_image.png",
+          "audio": "assets/new_series/1754991766955_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 4,
-          "img": "assets/codeZakaria_2/Screenshot_4.jpg",
-          "audio": "assets/codeZakaria_2/audio/4.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991769831_image.png",
+          "audio": "assets/new_series/1754991769831_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "2"
@@ -424,9 +424,9 @@
         },
         {
           "num": 5,
-          "img": "assets/codeZakaria_2/Screenshot_5.jpg",
-          "audio": "assets/codeZakaria_2/audio/5.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991773013_image.png",
+          "audio": "assets/new_series/1754991773014_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3"
@@ -434,9 +434,9 @@
         },
         {
           "num": 6,
-          "img": "assets/codeZakaria_2/Screenshot_6.jpg",
-          "audio": "assets/codeZakaria_2/audio/6.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991775892_image.png",
+          "audio": "assets/new_series/1754991775892_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "3"
@@ -444,9 +444,9 @@
         },
         {
           "num": 7,
-          "img": "assets/codeZakaria_2/Screenshot_7.jpg",
-          "audio": "assets/codeZakaria_2/audio/7.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991786393_image.png",
+          "audio": "assets/new_series/1754991786393_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "3"
@@ -454,45 +454,45 @@
         },
         {
           "num": 8,
-          "img": "assets/codeZakaria_2/Screenshot_8.jpg",
-          "audio": "assets/codeZakaria_2/audio/8.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991790011_image.png",
+          "audio": "assets/new_series/1754991790012_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 9,
-          "img": "assets/codeZakaria_2/Screenshot_9.jpg",
-          "audio": "assets/codeZakaria_2/audio/9.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991793070_image.png",
+          "audio": "assets/new_series/1754991793070_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 10,
-          "img": "assets/codeZakaria_2/Screenshot_10.jpg",
-          "audio": "assets/codeZakaria_2/audio/10.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991799640_image.png",
+          "audio": "assets/new_series/1754991799640_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 11,
-          "img": "assets/codeZakaria_2/Screenshot_11.jpg",
-          "audio": "assets/codeZakaria_2/audio/11.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991802597_image.png",
+          "audio": "assets/new_series/1754991802597_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 12,
-          "img": "assets/codeZakaria_2/Screenshot_12.jpg",
-          "audio": "assets/codeZakaria_2/audio/12.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991805916_image.png",
+          "audio": "assets/new_series/1754991805916_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "4"
@@ -500,18 +500,18 @@
         },
         {
           "num": 13,
-          "img": "assets/codeZakaria_2/Screenshot_13.jpg",
-          "audio": "assets/codeZakaria_2/audio/13.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991808954_image.png",
+          "audio": "assets/new_series/1754991808955_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 14,
-          "img": "assets/codeZakaria_2/Screenshot_14.jpg",
-          "audio": "assets/codeZakaria_2/audio/14.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991811802_image.png",
+          "audio": "assets/new_series/1754991811802_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "4"
@@ -519,35 +519,35 @@
         },
         {
           "num": 15,
-          "img": "assets/codeZakaria_2/Screenshot_15.jpg",
-          "audio": "assets/codeZakaria_2/audio/15.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991815640_image.png",
+          "audio": "assets/new_series/1754991815640_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 16,
-          "img": "assets/codeZakaria_2/Screenshot_16.jpg",
-          "audio": "assets/codeZakaria_2/audio/16.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991819912_image.png",
+          "audio": "assets/new_series/1754991819912_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 17,
-          "img": "assets/codeZakaria_2/Screenshot_17.jpg",
-          "audio": "assets/codeZakaria_2/audio/17.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991823248_image.png",
+          "audio": "assets/new_series/1754991823248_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 18,
-          "img": "assets/new_series/1726519848028_image.png",
-          "audio": "assets/new_series/1726519848028_audio.mp3",
+          "img": "assets/new_series/1754991826037_image.png",
+          "audio": "assets/new_series/1754991826037_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2",
@@ -556,27 +556,27 @@
         },
         {
           "num": 19,
-          "img": "assets/codeZakaria_2/Screenshot_19.jpg",
-          "audio": "assets/codeZakaria_2/audio/19.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991828772_image.png",
+          "audio": "assets/new_series/1754991828772_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 20,
-          "img": "assets/codeZakaria_2/Screenshot_20.jpg",
-          "audio": "assets/codeZakaria_2/audio/20.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991831411_image.png",
+          "audio": "assets/new_series/1754991831412_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 21,
-          "img": "assets/codeZakaria_2/Screenshot_21.jpg",
-          "audio": "assets/codeZakaria_2/audio/21.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991833797_image.png",
+          "audio": "assets/new_series/1754991833797_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "3"
@@ -584,18 +584,18 @@
         },
         {
           "num": 22,
-          "img": "assets/codeZakaria_2/Screenshot_22.jpg",
-          "audio": "assets/codeZakaria_2/audio/22.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991836329_image.png",
+          "audio": "assets/new_series/1754991836329_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 23,
-          "img": "assets/codeZakaria_2/Screenshot_23.jpg",
-          "audio": "assets/codeZakaria_2/audio/23.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991838913_image.png",
+          "audio": "assets/new_series/1754991838913_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "4"
@@ -603,18 +603,18 @@
         },
         {
           "num": 24,
-          "img": "assets/codeZakaria_2/Screenshot_24.jpg",
-          "audio": "assets/codeZakaria_2/audio/24.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991844404_image.png",
+          "audio": "assets/new_series/1754991844404_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 25,
-          "img": "assets/codeZakaria_2/Screenshot_25.jpg",
-          "audio": "assets/codeZakaria_2/audio/25.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991846651_image.png",
+          "audio": "assets/new_series/1754991846652_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "4"
@@ -622,18 +622,18 @@
         },
         {
           "num": 26,
-          "img": "assets/codeZakaria_2/Screenshot_26.jpg",
-          "audio": "assets/codeZakaria_2/audio/26.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991850099_image.png",
+          "audio": "assets/new_series/1754991850099_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "3"
           ]
         },
         {
           "num": 27,
-          "img": "assets/codeZakaria_2/Screenshot_27.jpg",
-          "audio": "assets/codeZakaria_2/audio/27.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991852996_image.png",
+          "audio": "assets/new_series/1754991852997_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3"
@@ -641,18 +641,18 @@
         },
         {
           "num": 28,
-          "img": "assets/codeZakaria_2/Screenshot_28.jpg",
-          "audio": "assets/codeZakaria_2/audio/28.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991856099_image.png",
+          "audio": "assets/new_series/1754991856100_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 29,
-          "img": "assets/codeZakaria_2/Screenshot_29.jpg",
-          "audio": "assets/codeZakaria_2/audio/29.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991858512_image.png",
+          "audio": "assets/new_series/1754991858513_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3",
@@ -661,9 +661,9 @@
         },
         {
           "num": 30,
-          "img": "assets/codeZakaria_2/Screenshot_30.jpg",
-          "audio": "assets/codeZakaria_2/audio/30.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991863122_image.png",
+          "audio": "assets/new_series/1754991863122_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3"
@@ -671,9 +671,9 @@
         },
         {
           "num": 31,
-          "img": "assets/codeZakaria_2/Screenshot_31.jpg",
-          "audio": "assets/codeZakaria_2/audio/31.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991881183_image.png",
+          "audio": "assets/new_series/1754991881183_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "3"
@@ -681,9 +681,9 @@
         },
         {
           "num": 32,
-          "img": "assets/codeZakaria_2/Screenshot_32.jpg",
-          "audio": "assets/codeZakaria_2/audio/32.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991884068_image.png",
+          "audio": "assets/new_series/1754991884068_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "4",
@@ -692,36 +692,36 @@
         },
         {
           "num": 33,
-          "img": "assets/codeZakaria_2/Screenshot_33.jpg",
-          "audio": "assets/codeZakaria_2/audio/33.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991886843_image.png",
+          "audio": "assets/new_series/1754991886843_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 34,
-          "img": "assets/codeZakaria_2/Screenshot_34.jpg",
-          "audio": "assets/codeZakaria_2/audio/34.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991889349_image.png",
+          "audio": "assets/new_series/1754991889349_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1"
           ]
         },
         {
           "num": 35,
-          "img": "assets/codeZakaria_2/Screenshot_35.jpg",
-          "audio": "assets/codeZakaria_2/audio/35.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991891995_image.png",
+          "audio": "assets/new_series/1754991891995_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 36,
-          "img": "assets/codeZakaria_2/Screenshot_36.jpg",
-          "audio": "assets/codeZakaria_2/audio/36.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991895129_image.png",
+          "audio": "assets/new_series/1754991895129_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2",
             "3"
@@ -729,18 +729,18 @@
         },
         {
           "num": 37,
-          "img": "assets/codeZakaria_2/Screenshot_37.jpg",
-          "audio": "assets/codeZakaria_2/audio/37.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991897808_image.png",
+          "audio": "assets/new_series/1754991897808_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 38,
-          "img": "assets/codeZakaria_2/Screenshot_38.jpg",
-          "audio": "assets/codeZakaria_2/audio/38.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991900812_image.png",
+          "audio": "assets/new_series/1754991900812_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "1",
             "2"
@@ -748,18 +748,18 @@
         },
         {
           "num": 39,
-          "img": "assets/codeZakaria_2/Screenshot_39.jpg",
-          "audio": "assets/codeZakaria_2/audio/39.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991903333_image.png",
+          "audio": "assets/new_series/1754991903333_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
         },
         {
           "num": 40,
-          "img": "assets/codeZakaria_2/Screenshot_40.jpg",
-          "audio": "assets/codeZakaria_2/audio/40.m4a",
-          "audio_explination": "",
+          "img": "assets/new_series/1754991910036_image.png",
+          "audio": "assets/new_series/1754991910036_audio.mp3",
+          "audio_explination": null,
           "answer": [
             "2"
           ]
