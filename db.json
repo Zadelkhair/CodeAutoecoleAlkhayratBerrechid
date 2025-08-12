@@ -11513,10 +11513,12 @@
         },
         {
           "num": 8,
-          "img": "assets/new_series/1755005899743_image.png",
-          "audio": "assets/new_series/1755005899743_audio.mp3",
+          "img": "assets/new_series/1755010543879_image.png",
+          "audio": "assets/new_series/1755010543879_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "3"
+          ]
         },
         {
           "num": 9,
@@ -11551,7 +11553,8 @@
           "audio": "assets/new_series/1755005956122_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "1"
+            "1",
+            "2"
           ]
         },
         {
@@ -11594,10 +11597,12 @@
         },
         {
           "num": 17,
-          "img": "assets/new_series/1755006028542_image.png",
-          "audio": "assets/new_series/1755006028542_audio.mp3",
+          "img": "assets/new_series/1755010769045_image.png",
+          "audio": "assets/new_series/1755010769046_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "2"
+          ]
         },
         {
           "num": 18,
@@ -13234,15 +13239,17 @@
         },
         {
           "num": 30,
-          "img": "assets/new_series/1755006752021_image.png",
-          "audio": "assets/new_series/1755006752021_audio.mp3",
+          "img": "assets/new_series/1755010666646_image.png",
+          "audio": "assets/new_series/1755010666646_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "2"
+          ]
         },
         {
           "num": 31,
-          "img": "assets/new_series/1755006766863_image.png",
-          "audio": "assets/new_series/1755006766864_audio.mp3",
+          "img": "assets/new_series/1755010669290_image.png",
+          "audio": "assets/new_series/1755010669290_audio.mp3",
           "audio_explination": null,
           "answer": [
             "3"
@@ -13557,8 +13564,8 @@
         },
         {
           "num": 24,
-          "img": "assets/new_series/1755009060167_image.png",
-          "audio": "assets/new_series/1755009060167_audio.mp3",
+          "img": "assets/new_series/1755010894079_image.png",
+          "audio": "assets/new_series/1755010894080_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1"
@@ -13625,15 +13632,17 @@
         },
         {
           "num": 31,
-          "img": "assets/new_series/1755009175058_image.png",
-          "audio": "assets/new_series/1755009175058_audio.mp3",
+          "img": "assets/new_series/1755010966778_image.png",
+          "audio": "assets/new_series/1755010966778_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "3"
+          ]
         },
         {
           "num": 32,
-          "img": "assets/new_series/1755009205402_image.png",
-          "audio": "assets/new_series/1755009205402_audio.mp3",
+          "img": "assets/new_series/1755011005632_image.png",
+          "audio": "assets/new_series/1755011005632_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1",
@@ -13810,12 +13819,12 @@
         },
         {
           "num": 10,
-          "img": "assets/new_series/1755009436684_image.png",
-          "audio": "assets/new_series/1755009436684_audio.mp3",
+          "img": "assets/new_series/1755011156893_image.png",
+          "audio": "assets/new_series/1755011156893_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2",
-            "4"
+            "3"
           ]
         },
         {
@@ -13898,8 +13907,8 @@
         },
         {
           "num": 19,
-          "img": "assets/new_series/1755009578165_image.png",
-          "audio": "assets/new_series/1755009578165_audio.mp3",
+          "img": "assets/new_series/1755011342091_image.png",
+          "audio": "assets/new_series/1755011342091_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2"
