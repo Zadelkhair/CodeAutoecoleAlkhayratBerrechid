@@ -2674,6 +2674,13 @@
           "answer": [
             "2"
           ]
+        },
+        {
+          "num": 41,
+          "img": "",
+          "audio": "",
+          "audio_explination": "",
+          "answer": []
         }
       ]
     },
@@ -9614,11 +9621,11 @@
         },
         {
           "num": 10,
-          "img": "assets/new_series/1753576385606_image.png",
-          "audio": "assets/new_series/1753576385606_audio.mp3",
+          "img": "assets/new_series/1755192573885_image.png",
+          "audio": "assets/new_series/1755192573887_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2"
+            "1"
           ]
         },
         {
