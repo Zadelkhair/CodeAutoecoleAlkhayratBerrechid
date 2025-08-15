@@ -10013,12 +10013,13 @@
         },
         {
           "num": 12,
-          "img": "assets/new_series/1753578329729_image.png",
-          "audio": "assets/new_series/1753578329729_audio.mp3",
+          "img": "assets/new_series/1755278814396_image.png",
+          "audio": "assets/new_series/1755278814396_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2",
-            "4"
+            "4",
+            "1"
           ]
         },
         {
