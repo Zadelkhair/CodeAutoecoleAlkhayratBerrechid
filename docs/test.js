@@ -103,7 +103,7 @@ let validate = () => {
 
     // check if the user clicked validate within 2 seconds
     let currentTime = new Date();
-    if (currentTime - lastValidateTime < 2000) {
+    if (currentTime - lastValidateTime < 500) {
         console.warn("You clicked validate too fast. Please wait a moment.");
         return;
     }
