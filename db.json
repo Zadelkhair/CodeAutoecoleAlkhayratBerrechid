@@ -2668,10 +2668,12 @@
         },
         {
           "num": 41,
-          "img": "assets/new_series/1755268662768_image.png",
-          "audio": "assets/new_series/1755268662768_audio.mp3",
+          "img": "assets/new_series/1755273874407_image.png",
+          "audio": "assets/new_series/1755273874407_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "1"
+          ]
         }
       ]
     },
