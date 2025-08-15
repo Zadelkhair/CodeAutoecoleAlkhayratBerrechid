@@ -85,6 +85,21 @@
             </div>
             <button class="btn-valider" onclick="validate()">Valider</button>
           </div>
+
+          <!-- #pause-screen -->
+           <div id="pause-screen" style="display: none;">
+            <img src="./image.png" alt="Pause">
+            <div class="pause-screen">
+              <div class="pause-content">
+                <h2>Pause <span id="pause-serie-info" ></span> </h2>
+                <p>Do you want to resume the test?</p>
+                <div>
+                  <button onclick="pauseResume()">Resume</button>
+                  <button class="btn-end" onclick="endSerie()">Stop</button>
+                </div>
+              </div>
+            </div>
+           </div>
         </div>
 
       </div>

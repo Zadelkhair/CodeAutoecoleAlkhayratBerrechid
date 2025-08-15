@@ -9,6 +9,7 @@ let timerElement = document.querySelector("#timer");
 let answerDisplayElement = document.querySelector("#answer-display");
 let answerButtons = document.querySelectorAll("#test-answers > button");    
 let pauseBtn = document.querySelector("#pause-btn");
+let pauseScreen = document.querySelector("#pause-screen");
 
 let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
@@ -175,35 +176,32 @@ const clearAnswer = () => {
     });
 }
 
-let nextQuestion = () => {
+const endSerie = () => {
+    clearInterval(timerInterval);
+    fullscreen(false);
+    if (examen !== null) {
+        window.location.href = `result.html?examen=true&id=${ID}`;
+    } else {
+        window.location.href = `result.html?series=${seriesNum}&index=${index}&id=${ID}`;
+    }
+};
 
+let nextQuestion = () => {
     currentQuestion++;
     if (currentQuestion >= serie.questions.length) {
-        // end of questions
-        clearInterval(timerInterval);
-        // redirect to result page
-        if(examen !== null){
-            window.location.href = `result.html?examen=true&id=${ID}`;
-        }
-        else {
-            window.location.href = `result.html?series=${seriesNum}&index=${index}&id=${ID}`;
-        }
-
-        fullscreen(false);
+        endSerie();
         return;
     }
 
     resetTimer();
-    
     clearAnswer();
 
     let question = serie.questions[currentQuestion];
     qustionNumElement.innerHTML = currentQuestion + 1;
-    
+
     // load image
     currentImg.src = question.img;
     currentImg.onload = () => {
-
         imgTestElement.src = currentImg.src;
 
         // load audio and play it
@@ -213,10 +211,8 @@ let nextQuestion = () => {
         // wait for audio to finish
         currentAudio.onended = () => {
             startTimer();
-        }
-
-    }
-
+        };
+    };
 }
 
 // nextQuestion();
@@ -235,6 +231,11 @@ const pause = () => {
     isPaused = true;
     pauseBtn.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwUlEQVR4nO3WMWoCQBCF4Q8CwTSms7XQPhfICWxyi1zBNqVX8Aq2llYhhNSCN7BU0ohNIBmbXUiZQmeV+OCvf1hmZx7XNM47lnjKFscvPvDYQhyFOYYtxIEvTNHLFkdhhxfcZYujsMYzbrLFUVhh1EIchQUeWogD35ihny2Owh4T3GeLK1uMcZstrrz+G/Em+6nrcHX/IrzY77TIXiCr7JW5zj4Sn2VSO8cS1pxNEfgpkzo4lbCmWdl7a1Vvr3HsHACr5CJWnhywpwAAAABJRU5ErkJggg==">`;
     fullscreen(false);
+    // show pauseScreen
+    pauseScreen.style.display = "flex";
+    // get #pause-serie-info
+    let pauseSerieInfo = document.querySelector("#pause-serie-info");
+    pauseSerieInfo.innerHTML = `( serie ${seriesNum} - question ${currentQuestion + 1} )`;
 }
 
 const resume = () => {
@@ -242,6 +243,8 @@ const resume = () => {
     isPaused = false;
     pauseBtn.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAX0lEQVR4nO2WQQqAQAwD53ku/v8D1n9EBAUpFDwURM1AbiELpQ0L5s/MwAroUACj0V8Sl5BTS6O/RIW6/CV+WB51wssln9NdXCBygSRcIHpdgcRTX5+RwvaQqdFvPs4Gyhr/h1qOuFIAAAAASUVORK5CYII=">`;
     fullscreen();
+    // show pauseScreen
+    pauseScreen.style.display = "none";
 }
 
 const pauseResume = () => {
