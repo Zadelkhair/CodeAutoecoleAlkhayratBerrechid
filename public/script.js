@@ -523,7 +523,9 @@ const prevQ = async () => {
         currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
     }
     if (currentQuestionIndex > 0) {
+        questionLoading(true);
         await saveQuestion();
+        questionLoading(false);
         selectQuestionByIndex(currentQuestionIndex - 1);
     }
 };
@@ -534,7 +536,9 @@ const nextQ = async () => {
         currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
     }
     if (currentQuestionIndex < selectedSerie.questions.length - 1) {
+        questionLoading(true);
         await saveQuestion();
+        questionLoading(false);
         selectQuestionByIndex(currentQuestionIndex + 1);
     }
 }
