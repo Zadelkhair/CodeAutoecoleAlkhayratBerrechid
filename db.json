@@ -408,10 +408,6 @@
           "img": "assets/new_series/1755297603886_image.png",
           "audio": "assets/new_series/1755297603887_audio.mp3",
           "audio_explination": null,
-          "answer": [
-            "2"
-          ]
-        },
         {
           "num": 4,
           "img": "assets/new_series/1755297604350_image.png",
@@ -772,8 +768,8 @@
       "questions": [
         {
           "num": 1,
-          "img": "assets/new_series/1755014592687_image.png",
-          "audio": "assets/new_series/1755014592687_audio.mp3",
+          "img": "assets/new_series/1755298240927_image.png",
+          "audio": "assets/new_series/1755298240928_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2"
@@ -781,8 +777,8 @@
         },
         {
           "num": 2,
-          "img": "assets/new_series/1755014593122_image.png",
-          "audio": "assets/new_series/1755014593123_audio.mp3",
+          "img": "assets/new_series/1755298241578_image.png",
+          "audio": "assets/new_series/1755298241580_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1"
@@ -790,8 +786,8 @@
         },
         {
           "num": 3,
-          "img": "assets/new_series/1755014593546_image.png",
-          "audio": "assets/new_series/1755014593546_audio.mp3",
+          "img": "assets/new_series/1755298241732_image.png",
+          "audio": "assets/new_series/1755298241732_audio.mp3",
           "audio_explination": null,
           "answer": [
             "2"
@@ -799,8 +795,8 @@
         },
         {
           "num": 4,
-          "img": "assets/new_series/1755014594292_image.png",
-          "audio": "assets/new_series/1755014594292_audio.mp3",
+          "img": "assets/new_series/1755298247594_image.png",
+          "audio": "assets/new_series/1755298247595_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1"
@@ -808,8 +804,8 @@
         },
         {
           "num": 5,
-          "img": "assets/new_series/1755014594661_image.png",
-          "audio": "assets/new_series/1755014594661_audio.mp3",
+          "img": "assets/new_series/1755298248092_image.png",
+          "audio": "assets/new_series/1755298248092_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1",
@@ -818,8 +814,8 @@
         },
         {
           "num": 6,
-          "img": "assets/new_series/1755014594993_image.png",
-          "audio": "assets/new_series/1755014594993_audio.mp3",
+          "img": "assets/new_series/1755298248937_image.png",
+          "audio": "assets/new_series/1755298248938_audio.mp3",
           "audio_explination": null,
           "answer": [
             "1",
@@ -828,8 +824,8 @@
         },
         {
           "num": 7,
-          "img": "assets/new_series/1755014595413_image.png",
-          "audio": "assets/new_series/1755014595413_audio.mp3",
+          "img": "assets/new_series/1755298244421_image.png",
+          "audio": "assets/new_series/1755298244421_audio.mp3",
           "audio_explination": null,
           "answer": [
             "3"

@@ -96,7 +96,18 @@ let resetTimer = () => {
     timer = maxTime;
 }
 
+// last time clicked on validate button (default current datetime)
+let lastValidateTime = new Date();
+
 let validate = () => {
+
+    // check if the user clicked validate within 2 seconds
+    let currentTime = new Date();
+    if (currentTime - lastValidateTime < 500) {
+        console.warn("You clicked validate too fast. Please wait a moment.");
+        return;
+    }
+    lastValidateTime = currentTime; // update last validate time
 
     let question = serie.questions[currentQuestion];
     let correct = question.answer;

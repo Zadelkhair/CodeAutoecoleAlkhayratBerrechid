@@ -27,13 +27,30 @@ let selectedQuestion = {
 
 let currentQuestionIndex = null;
 
+let questionLoading = (isLoading) => {
+    const loader = document.getElementById('question-loader');
+    if (isLoading) {
+        loader.classList.remove('d-none');
+    } else {
+        loader.classList.add('d-none');
+    }
+}
+
 // Helper to select question by index in selectedSerie.questions
-function selectQuestionByIndex(idx) {
+const selectQuestionByIndex = async (idx) => {
     if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    if (idx < 0) idx = 0;
-    if (idx >= selectedSerie.questions.length) idx = selectedSerie.questions.length - 1;
-    currentQuestionIndex = idx;
-    selectQuestion(selectedSerie.questions[idx].num);
+    try {
+        questionLoading(true);
+        if (idx < 0) idx = 0;
+        if (idx >= selectedSerie.questions.length) idx = selectedSerie.questions.length - 1;
+        currentQuestionIndex = idx;
+        await selectQuestion(selectedSerie.questions[idx].num);
+        questionLoading(false)
+    }
+    catch (error) {
+        console.error('Error selecting question by index:', error);
+        questionLoading(false)
+    }
 }
 
 const toggleRecording = async (button, audioPlayer, container, callBack) => {
@@ -101,8 +118,7 @@ document.getElementById('record-explanation-audio').addEventListener('click', ()
     });
 });
 
-const selectQuestion = (num) => {
-
+const selectQuestion = async (num) => {
     // get question
     let question = selectedSerie.questions.find(question => question.num == num) ?? {};
 
@@ -133,7 +149,22 @@ const selectQuestion = (num) => {
 
     // set image
     let img = document.getElementById('s-image');
-    img.src = form.img;
+    let imgPromise = new Promise((resolve) => {
+        if (form.img) {
+            img.onload = () => {
+                resolve();
+                console.log("image loaded");
+            };
+            img.onerror = () => {
+                resolve();
+                console.log("image not loaded something wrong");
+            };
+            img.src = form.img;
+        } else {
+            img.src = "";
+            resolve();
+        }
+    });
 
     // set answers
     let checks = document.querySelectorAll('#answer-checks input[type="checkbox"]');
@@ -149,14 +180,49 @@ const selectQuestion = (num) => {
 
     // set audio
     let audio = document.getElementById('question-audio-player');
-    audio.src = form.audio;
+    let audioPromise = new Promise((resolve) => {
+        if (form.audio) {
+            audio.onloadeddata = () => {
+                resolve()
+                console.log("audio loaded");
+            };
+            audio.onerror = () => {
+                resolve();
+                console.log("audio not loaded something wrong");
+            };
+            audio.src = form.audio;
+        } else {
+            audio.src = "";
+            resolve();
+        }
+    });
 
     // set audio explanation
     let audio_explination = document.getElementById('explanation-audio-player');
-    audio_explination.src = form.audio_explination;
+    let audioExplPromise = new Promise((resolve) => {
+        if (form.audio_explination) {
+            audio_explination.onloadeddata = () => {
+                resolve();
+                console.log("audio explanation loaded");
+            };
+            audio_explination.onerror = () => {
+                resolve();
+                console.log("audio explanation not loaded something wrong");
+            };
+            audio_explination.src = form.audio_explination;
+        } else {
+            audio_explination.src = "";
+            resolve();
+        }
+    });
 
     // set currentQuestionIndex
     currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == num);
+
+    // Wait for all assets to load
+    await Promise.all([imgPromise, audioPromise, audioExplPromise]);
+
+    console.log("Assets loaded successfully");
 };
 
 const selectSerie = (num) => {
@@ -255,6 +321,7 @@ const watchChanges = () => {
             // on audio loaded
             audio.addEventListener('loadeddata', () => {
                 form.audio_explination = audio.src;
+                checkAssetsLoaded();
             });
         });
     });
@@ -272,6 +339,7 @@ const watchChanges = () => {
             // on audio loaded
             audio.addEventListener('loadeddata', () => {
                 form.audio = audio.src;
+                checkAssetsLoaded();
             });
         });
     });
@@ -291,6 +359,7 @@ const watchChanges = () => {
             // on image loaded
             img.addEventListener('load', () => {
                 form.img = img.src;
+                checkAssetsLoaded();
             });
         });
     });
@@ -447,6 +516,29 @@ const deleteSerie = async () => {
     }
 }
 
+// Add event listeners for prev/next buttons
+const prevQ = async () => {
+    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
+    if (currentQuestionIndex === null) {
+        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
+    }
+    if (currentQuestionIndex > 0) {
+        await saveQuestion();
+        selectQuestionByIndex(currentQuestionIndex - 1);
+    }
+};
+
+const nextQ = async () => {
+    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
+    if (currentQuestionIndex === null) {
+        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
+    }
+    if (currentQuestionIndex < selectedSerie.questions.length - 1) {
+        await saveQuestion();
+        selectQuestionByIndex(currentQuestionIndex + 1);
+    }
+}
+
 // Bulk image upload logic for sidebar
 let bulkImages = [];
 
@@ -569,28 +661,7 @@ const start = () => {
 start();
 watchChanges();
 
-// Add event listeners for prev/next buttons
-document.getElementById('prev-question-btn').addEventListener('click', async () => {
-    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    if (currentQuestionIndex === null) {
-        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
-    }
-    if (currentQuestionIndex > 0) {
-        await saveQuestion();
-        selectQuestionByIndex(currentQuestionIndex - 1);
-    }
-});
 
-document.getElementById('next-question-btn').addEventListener('click', async () => {
-    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    if (currentQuestionIndex === null) {
-        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
-    }
-    if (currentQuestionIndex < selectedSerie.questions.length - 1) {
-        await saveQuestion();
-        selectQuestionByIndex(currentQuestionIndex + 1);
-    }
-});
 
 // Add event listener for "Remove Image" button
 document.getElementById('remove-image-btn').addEventListener('click', (e) => {
@@ -619,4 +690,24 @@ imageContainer.addEventListener('drop', (e) => {
         img.src = URL.createObjectURL(file); // Display the dropped image
         form.img = img.src; // Update the form's image field
     }
+});
+
+// Function to check if all assets are loaded
+function checkAssetsLoaded() {
+    const saveButton = document.getElementById("saveQuestion");
+    const isImageLoaded = form.img !== null && form.img !== "";
+    const isAudioLoaded = form.audio !== null && form.audio !== "";
+    const isAudioExplanationLoaded = form.audio_explination !== null && form.audio_explination !== "";
+
+    if (isImageLoaded && isAudioLoaded && isAudioExplanationLoaded) {
+        saveButton.disabled = false;
+    } else {
+        saveButton.disabled = true;
+        alert("Please upload all assets (image, audio, audio explanation) before saving.");
+    }
+}
+
+// Ensure save button is initially disabled
+document.addEventListener('DOMContentLoaded', () => {
+    checkAssetsLoaded();
 });

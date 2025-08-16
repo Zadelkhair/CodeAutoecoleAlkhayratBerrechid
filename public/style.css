@@ -6,6 +6,10 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    width: 100%;
 }
 
 .s-image-container:hover {
@@ -66,4 +70,69 @@
 
 #saveQuestion.loading .spinner-border {
     display: block;
+}
+
+#sidebar {
+    transition: transform 0.3s ease-in-out;
+}
+
+.prev-question-btn,
+.next-question-btn {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 10px;
+    z-index: 1;
+}
+
+.next-question-btn 
+{
+    left: auto;
+    right: 10px;
+    z-index: 1;
+}
+
+.question-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100%;
+        z-index: 1040;
+        transform: translateX(-100%);
+    }
+
+    #sidebar.d-none {
+        transform: translateX(0);
+    }
+
+    #sidebarToggle {
+        display: block;
+    }
+
+    .serie-info {
+        font-size: 14px;
+    }
+
+    .s-image-container {
+        height: 300px;
+    }
 }
