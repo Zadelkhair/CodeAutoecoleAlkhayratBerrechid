@@ -225,5 +225,20 @@ app.post('/push-to-github', async (req, res) => {
 
 // Start the server
 app.listen(port, '0.0.0.0',  () => {
-    console.log(`Server running at http://0.0.0.0:${port}`);
+
+    // get LAN ip
+    const os = require('os');
+    const interfaces = os.networkInterfaces();
+    let localIp = 'localhost';
+    for (const interfaceName in interfaces) {
+        const iface = interfaces[interfaceName];
+        for (const alias of iface) {
+            if (alias.family === 'IPv4' && !alias.internal) {
+                localIp = alias.address;
+                break;
+            }
+        }
+    }
+
+    console.log(`Server running at http://${localIp}:${port}`);
 });
