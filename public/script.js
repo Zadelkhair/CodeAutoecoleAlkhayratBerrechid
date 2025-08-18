@@ -439,38 +439,55 @@ const createAQuestion = async () => {
 
 // saveQuestion
 const saveQuestion = async () => {
+    let uploadPromises = [];
 
-    let out = await services.uploadSeriesAssets(form.img,form.audio,form.audio_explination);
+    // Check if image has changed
+    if (form.img && form.img !== selectedQuestion.img) {
+        uploadPromises.push(services.uploadSeriesAssets(form.img, null, null).then(out => {
+            form.img = out.image;
+        }));
+    }
 
-    console.log(out);
+    // Check if audio has changed
+    if (form.audio && form.audio !== selectedQuestion.audio) {
+        uploadPromises.push(services.uploadSeriesAssets(null, form.audio, null).then(out => {
+            form.audio = out.audio;
+        }));
+    }
+
+    // Check if audio explanation has changed
+    if (form.audio_explination && form.audio_explination !== selectedQuestion.audio_explination) {
+        uploadPromises.push(services.uploadSeriesAssets(null, null, form.audio_explination).then(out => {
+            form.audio_explination = out.audioExplanation;
+        }));
+    }
+
+    // Wait for all uploads to complete
+    await Promise.all(uploadPromises);
 
     let question = {
         num: form.question_num,
-        img: out.image,
-        audio: out.audio,
-        audio_explination: out.audioExplanation,
+        img: form.img,
+        audio: form.audio,
+        audio_explination: form.audio_explination,
         answer: form.answer,
-    }
+    };
 
-    // update question on serie and upload it
-    // find the question
-    q = selectedSerie.questions.find((q)=>q.num==form.question_num);
-    qi = selectedSerie.questions.indexOf(q);
+    // Update question in the series
+    let q = selectedSerie.questions.find(q => q.num == form.question_num);
+    let qi = selectedSerie.questions.indexOf(q);
 
-    if(q) {
-        
+    if (q) {
         selectedSerie.questions[qi] = question;
 
-        // start loading
+        // Start loading
         document.getElementById("saveQuestion").classList.add('loading');
         document.getElementById("saveQuestion").disabled = true;
-        await services.updateSeries(form.serie_num,selectedSerie);
+        await services.updateSeries(form.serie_num, selectedSerie);
         document.getElementById("saveQuestion").classList.remove('loading');
         document.getElementById("saveQuestion").disabled = false;
-
     }
-
-}
+};
 document.getElementById("saveQuestion").addEventListener('click',saveQuestion);
 
 const deleteQuestion = async () => {
