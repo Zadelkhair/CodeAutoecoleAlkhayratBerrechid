@@ -171,11 +171,25 @@ const selectQuestion = async (num) => {
     checks.forEach((check) => {
         check.checked = false;
     });
+    form.answer = []; // Clear previous answers
+    form.answer = question.answer ? [...question.answer] : [];
     form.answer.forEach((answer) => {
         let check = document.querySelector(`#answer-checks input[value="${answer}"]`);
         if (check) {
             check.checked = true;
         }
+    });
+
+    // Re-attach change listeners to checkboxes
+    checks.forEach((check) => {
+        check.onchange = (e) => {
+            let value = e.target.value;
+            if (e.target.checked) {
+                if (!form.answer.includes(value)) form.answer.push(value);
+            } else {
+                form.answer = form.answer.filter((answer) => answer != value);
+            }
+        };
     });
 
     // set audio
@@ -307,75 +321,77 @@ const selectSerie = (num) => {
 
 const watchChanges = () => {
     // upload audios
-    document.getElementById('upload-explanation-audio').addEventListener('click', () => {
-        // get audioFile2
-        let audioFile = document.getElementById('audioFile2');
-        audioFile.click();
+    const uploadExplanationAudio = document.getElementById('upload-explanation-audio');
+    if (uploadExplanationAudio) {
+        uploadExplanationAudio.addEventListener('click', () => {
+            let audioFile = document.getElementById('audioFile2');
+            audioFile.click();
 
-        // on change
-        audioFile.addEventListener('change', (e) => {
-            let file = e.target.files[0];
-            let audio = document.getElementById('explanation-audio-player');
-            audio.src = URL.createObjectURL(file);
+            audioFile.addEventListener('change', (e) => {
+                let file = e.target.files[0];
+                let audio = document.getElementById('explanation-audio-player');
+                audio.src = URL.createObjectURL(file);
 
-            // on audio loaded
-            audio.addEventListener('loadeddata', () => {
-                form.audio_explination = audio.src;
-                checkAssetsLoaded();
+                audio.addEventListener('loadeddata', () => {
+                    form.audio_explination = audio.src;
+                    checkAssetsLoaded();
+                });
             });
         });
-    });
-    document.getElementById('upload-question-audio').addEventListener('click', () => {
-        // get audioFile
-        let audioFile = document.getElementById('audioFile1');
-        audioFile.click();
+    }
 
-        // on change
-        audioFile.addEventListener('change', (e) => {
-            let file = e.target.files[0];
-            let audio = document.getElementById('question-audio-player');
-            audio.src = URL.createObjectURL(file);
+    const uploadQuestionAudio = document.getElementById('upload-question-audio');
+    if (uploadQuestionAudio) {
+        uploadQuestionAudio.addEventListener('click', () => {
+            let audioFile = document.getElementById('audioFile1');
+            audioFile.click();
 
-            // on audio loaded
-            audio.addEventListener('loadeddata', () => {
-                form.audio = audio.src;
-                checkAssetsLoaded();
+            audioFile.addEventListener('change', (e) => {
+                let file = e.target.files[0];
+                let audio = document.getElementById('question-audio-player');
+                audio.src = URL.createObjectURL(file);
+
+                audio.addEventListener('loadeddata', () => {
+                    form.audio = audio.src;
+                    checkAssetsLoaded();
+                });
             });
         });
-    });
+    }
 
-    // set image
-    document.getElementById('s-image-container').addEventListener('click', () => {
-        // get imageFile
-        let imageFile = document.getElementById('imageFile');
-        imageFile.click();
-
-        // on change
-        imageFile.addEventListener('change', (e) => {
-            let file = e.target.files[0];
-            let img = document.getElementById('s-image');
-            img.src = URL.createObjectURL(file);
-
-            // on image loaded
-            img.addEventListener('load', () => {
-                form.img = img.src;
-                checkAssetsLoaded();
-            });
-        });
-    });
+    // REMOVE this block, handled globally after DOMContentLoaded
+    // document.getElementById('s-image-container').addEventListener('click', () => {
+    //     // get imageFile
+    //     let imageFile = document.getElementById('imageFile');
+    //     imageFile.click();
+    //
+    //     // on change
+    //     imageFile.addEventListener('change', (e) => {
+    //         let file = e.target.files[0];
+    //         let img = document.getElementById('s-image');
+    //         img.src = URL.createObjectURL(file);
+    //
+    //         // on image loaded
+    //         img.addEventListener('load', () => {
+    //             form.img = img.src;
+    //             checkAssetsLoaded();
+    //         });
+    //     });
+    // });
 
     // update answers
-    let checks = document.querySelectorAll('#answer-checks input[type="checkbox"]');
-    checks.forEach((check) => {
-        check.addEventListener('change', (e) => {
-            let value = e.target.value;
-            if (e.target.checked) {
-                form.answer.push(value);
-            } else {
-                form.answer = form.answer.filter((answer) => answer != value);
-            }
-        });
-    });
+    // REMOVE this block, now handled in selectQuestion
+    // let checks = document.querySelectorAll('#answer-checks input[type="checkbox"]');
+    // checks.forEach((check) => {
+    //     check.addEventListener('change', (e) => {
+    //         let value = e.target.value;
+    //         if (e.target.checked) {
+    //             form.answer.push(value);
+    //         } else {
+    //             form.answer = form.answer.filter((answer) => answer != value);
+    //         }
+    //     });
+    // });
 
     
 }
@@ -462,8 +478,12 @@ const saveQuestion = async () => {
         }));
     }
 
+    console.log('Saving question:', form);
+
     // Wait for all uploads to complete
     await Promise.all(uploadPromises);
+
+    console.log('All assets uploaded successfully:', form);
 
     let question = {
         num: form.question_num,
@@ -473,13 +493,19 @@ const saveQuestion = async () => {
         answer: form.answer,
     };
 
+    console.log('Final question data to save:', question);
+
     // Update question in the series
     let q = selectedSerie.questions.find(q => q.num == form.question_num);
     let qi = selectedSerie.questions.indexOf(q);
 
+    console.log('q',q);
+
     if (q) {
         selectedSerie.questions[qi] = question;
 
+        console.log(`Updating question: ${q.num} with new data:`, form);
+        
         // Start loading
         document.getElementById("saveQuestion").classList.add('loading');
         document.getElementById("saveQuestion").disabled = true;
@@ -487,7 +513,9 @@ const saveQuestion = async () => {
         document.getElementById("saveQuestion").classList.remove('loading');
         document.getElementById("saveQuestion").disabled = false;
     }
+
 };
+
 document.getElementById("saveQuestion").addEventListener('click',saveQuestion);
 
 const deleteQuestion = async () => {
@@ -679,8 +707,11 @@ const start = () => {
     });
 }
 
-start();
-watchChanges();
+document.addEventListener('DOMContentLoaded', () => {
+    start();
+    watchChanges();
+    checkAssetsLoaded();
+});
 
 
 
@@ -690,10 +721,32 @@ document.getElementById('remove-image-btn').addEventListener('click', (e) => {
     const img = document.getElementById('s-image');
     img.src = ''; // Clear the image source
     form.img = null; // Reset the form's image field
+    checkAssetsLoaded();
 });
 
-// Add drag-and-drop functionality for the image container
+// Make clicking anywhere in the image container (including the image) open the file selector
 const imageContainer = document.getElementById('s-image-container');
+imageContainer.addEventListener('click', (e) => {
+    if (e.target.id !== 'remove-image-btn') {
+        const imageFile = document.getElementById('imageFile');
+        // Remove previous change handlers to avoid stacking
+        imageFile.value = ""; // Reset file input
+        imageFile.onchange = function (event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const img = document.getElementById('s-image');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => {
+                    form.img = img.src;
+                    checkAssetsLoaded();
+                };
+            }
+        };
+        imageFile.click();
+    }
+});
+
+// Drag-and-drop functionality for the image container
 imageContainer.addEventListener('dragover', (e) => {
     e.preventDefault();
     imageContainer.style.backgroundColor = '#e9ecef'; // Highlight dropzone
@@ -710,21 +763,18 @@ imageContainer.addEventListener('drop', (e) => {
         const img = document.getElementById('s-image');
         img.src = URL.createObjectURL(file); // Display the dropped image
         form.img = img.src; // Update the form's image field
+        checkAssetsLoaded();
     }
 });
 
 // Function to check if all assets are loaded
 function checkAssetsLoaded() {
     const saveButton = document.getElementById("saveQuestion");
-    const isImageLoaded = form.img !== null && form.img !== "";
-    const isAudioLoaded = form.audio !== null && form.audio !== "";
-    const isAudioExplanationLoaded = form.audio_explination !== null && form.audio_explination !== "";
-
-    if (isImageLoaded && isAudioLoaded && isAudioExplanationLoaded) {
+    // Enable save button if a question is selected
+    if (form.question_num !== null && form.question_num !== undefined) {
         saveButton.disabled = false;
     } else {
         saveButton.disabled = true;
-        alert("Please upload all assets (image, audio, audio explanation) before saving.");
     }
 }
 

@@ -376,6 +376,16 @@
           "answer": [
             "2"
           ]
+        },
+        {
+          "num": 41,
+          "img": "assets/new_series/1756983724942_image.png",
+          "audio": "assets/new_series/1756983829784_audio.mp3",
+          "audio_explination": "",
+          "answer": [
+            "1",
+            "2"
+          ]
         }
       ]
     },
