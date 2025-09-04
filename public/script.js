@@ -45,7 +45,15 @@ const selectQuestionByIndex = async (idx) => {
         if (idx >= selectedSerie.questions.length) idx = selectedSerie.questions.length - 1;
         currentQuestionIndex = idx;
         await selectQuestion(selectedSerie.questions[idx].num);
-        questionLoading(false)
+        questionLoading(false);
+
+        // Update sidebar highlight
+        document.querySelectorAll('.list-questions i').forEach((el) => {
+            el.classList.remove('selected');
+        });
+        const num = selectedSerie.questions[idx].num;
+        const sidebarItem = document.querySelector('.list-questions i[value="' + num + '"]');
+        if (sidebarItem) sidebarItem.classList.add('selected');
     }
     catch (error) {
         console.error('Error selecting question by index:', error);

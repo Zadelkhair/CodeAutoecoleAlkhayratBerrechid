@@ -240,5 +240,6 @@ app.listen(port, '0.0.0.0',  () => {
         }
     }
 
-    console.log(`Server running at http://${localIp}:${port}`);
+    console.log(`Server running at LAN : http://${localIp}:${port}`);
+    console.log(`Localhost : http://127.0.0.1:${port}`);
 });
