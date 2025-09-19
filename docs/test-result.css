@@ -49,8 +49,7 @@ body {
     font-size: 20px;
 }
 
-#home-btn ,
-#history-btn {
+#home-btn {
     margin-left: 20px;
     background-color: white;
     color: black;
@@ -147,9 +146,7 @@ body {
     background-color: rgb(34, 79, 227);
 }
 
-.test-answers button:hover {
-    /* background-color: rgb(34, 79, 227); */
-}
+/* removed empty :hover rule for .test-answers button */
 
 .btn-valider {
     width: 100%;

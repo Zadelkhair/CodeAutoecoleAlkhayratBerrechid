@@ -17,7 +17,6 @@ let seriesNum = urlParams.get("series");
 let index = urlParams.get("index");
 let examen = urlParams.get("examen");
 
-let history = JSON.parse(localStorage.getItem("history"))??[];
 
 if ((seriesNum === null || index === null) && examen === null) {
     window.location.href = "series.html";
@@ -132,32 +131,6 @@ let validate = () => {
 
     // save to local storage
     localStorage.setItem(`userAnswers-${ID}`, JSON.stringify(userAnswers));
-
-    // check if userAnswers-<ID> is in history
-    let historyIndex = history.findIndex((item) => item.id === ID);
-    if (historyIndex === -1) {
-        history.push({
-            id: ID, 
-            series: examen !== null ? "examen" : seriesNum,
-            index: index,
-            result: userAnswers.filter((answer) => answer.isCorrect).length,
-            total: userAnswers.length,
-            date: new Date().toLocaleString(),
-            userAnswers
-        });
-        localStorage.setItem("history", JSON.stringify(history));
-    } else {
-        history[historyIndex] = {
-            id: ID, 
-            series: examen !== null ? "examen" : seriesNum,
-            index: index,
-            result: userAnswers.filter((answer) => answer.isCorrect).length,
-            total: userAnswers.length,
-            date: new Date().toLocaleString(),
-            userAnswers,
-        };
-        localStorage.setItem("history", JSON.stringify(history));
-    }
 
     nextQuestion();
 }

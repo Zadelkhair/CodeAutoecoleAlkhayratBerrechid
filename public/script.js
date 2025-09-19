@@ -721,8 +721,6 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAssetsLoaded();
 });
 
-
-
 // Add event listener for "Remove Image" button
 document.getElementById('remove-image-btn').addEventListener('click', (e) => {
     e.stopPropagation(); // Prevent triggering the image container click event

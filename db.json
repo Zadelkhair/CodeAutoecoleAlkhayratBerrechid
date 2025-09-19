@@ -408,7 +408,9 @@
           "img": "assets/new_series/1755297603886_image.png",
           "audio": "assets/new_series/1755297603887_audio.mp3",
           "audio_explination": null,
-          "answer": []
+          "answer": [
+            "2"
+          ]
         },
         {
           "num": 4,
@@ -2651,8 +2653,7 @@
           "audio": "assets/new_series/1755014740761_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2",
-            "3"
+            "2"
           ]
         },
         {
@@ -2661,7 +2662,8 @@
           "audio": "assets/new_series/1755014740795_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2"
+            "2",
+            "3"
           ]
         },
         {
@@ -4712,7 +4714,7 @@
           "audio": "assets/new_series/1726610025932_audio.mp3",
           "audio_explination": "assets/new_series/1726610025932_audioExplanation.mp3",
           "answer": [
-            "2"
+            "3"
           ]
         },
         {
@@ -5752,7 +5754,8 @@
           "audio": "assets/new_series/1753661721369_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2"
+            "1",
+            "3"
           ]
         },
         {
@@ -9551,7 +9554,7 @@
           "audio": "assets/new_series/1753576383695_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "1"
+            "2"
           ]
         },
         {
@@ -9560,7 +9563,7 @@
           "audio": "assets/new_series/1753576383907_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2"
+            "1"
           ]
         },
         {
@@ -13392,7 +13395,7 @@
         },
         {
           "num": 6,
-          "img": "assets/new_series/1755006946604_image.png",
+          "img": "assets/new_series/1758283503870_image.png",
           "audio": "assets/new_series/1755006946604_audio.mp3",
           "audio_explination": null,
           "answer": [
@@ -13639,7 +13642,7 @@
         },
         {
           "num": 32,
-          "img": "assets/new_series/1755011005632_image.png",
+          "img": "assets/new_series/1758283206124_image.png",
           "audio": "assets/new_series/1755011005632_audio.mp3",
           "audio_explination": null,
           "answer": [
@@ -13692,7 +13695,7 @@
           "audio": "assets/new_series/1755009264252_audio.mp3",
           "audio_explination": null,
           "answer": [
-            "2"
+            "3"
           ]
         },
         {

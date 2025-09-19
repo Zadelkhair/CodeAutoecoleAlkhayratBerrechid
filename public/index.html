@@ -12,7 +12,7 @@
 <body>
 
     <!-- Sidebar Toggle Button -->
-    <button id="sidebarToggle" class="btn btn-primary d-md-none position-fixed" 
+    <button id="sidebarToggle" class="btn btn-primary d-md-none position-fixed"
         style="top: 10px; left: 10px; z-index: 1050;">
         ☰
     </button>
@@ -43,9 +43,10 @@
                         <span id="bulk-image-drop-text">Drop images here or click to select</span>
                         <input type="file" id="bulk-image-input" class="d-none" multiple accept="image/*">
                     </div>
-                    <div id="bulk-image-preview"
-                        style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px;"></div>
-                    <button id="bulk-image-submit" class="btn text-white bg-black w-100" disabled>Submit Bulk Images</button>
+                    <div id="bulk-image-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+                    </div>
+                    <button id="bulk-image-submit" class="btn text-white bg-black w-100" disabled>Submit Bulk
+                        Images</button>
                 </div>
 
                 <h5>Questions</h5>
@@ -54,17 +55,13 @@
 
                 <div class="row">
                     <div class="col-6">
-                        <button id="addQuestion" class="btn w-100 btn-primary mt-5"
-                            onclick="services.syncToDocs()"
-                        >
+                        <button id="addQuestion" class="btn w-100 btn-primary mt-5" onclick="services.syncToDocs()">
                             sync
                         </button>
                     </div>
                     <!-- push -->
                     <div class="col-6">
-                        <button id="addQuestion" class="btn w-100 btn-success mt-5"
-                            onclick="services.pushToGithub()"
-                        >
+                        <button id="addQuestion" class="btn w-100 btn-success mt-5" onclick="services.pushToGithub()">
                             push
                         </button>
                     </div>
@@ -82,29 +79,36 @@
                 </div>
 
                 <!-- select serie / question -->
-                <div class="mb-3 serie-info mt-5 mt-md-0" >
-                        <span for="serieSelect" >Selected Serie</span>
-                        <span id="selectedSerie-num" class="mx-1">--</span>
-                        <button class="btn btn-sm s-btn btn-danger" onclick="deleteSerie()" >x</button>
-                        <span class="mx-2">|</span>
-                        <span for="serieSelect" >Selected Question</span>
-                        <span id="selectedQuestion-num" class="mx-1">--</span>
-                        <button class="btn btn-sm s-btn btn-danger" onclick="deleteQuestion()" >x</button>
+                <div class="mb-3 serie-info mt-5 mt-md-0">
+                    <span for="serieSelect">Selected Serie</span>
+                    <span id="selectedSerie-num" class="mx-1">--</span>
+                    <button class="btn btn-sm s-btn btn-danger" onclick="deleteSerie()">x</button>
+                    <span class="mx-2">|</span>
+                    <span for="serieSelect">Selected Question</span>
+                    <span id="selectedQuestion-num" class="mx-1">--</span>
+                    <button class="btn btn-sm s-btn btn-danger" onclick="deleteQuestion()">x</button>
                 </div>
 
                 <hr />
 
                 <div class="mb-3">
-                    <div style="position: relative; display: flex; align-items: center; justify-content: space-between;">
-                        <button id="prev-question-btn" class="prev-question-btn btn btn-outline-secondary me-2" onclick="prevQ()">
+                    <div
+                        style="position: relative; display: flex; align-items: center; justify-content: space-between;">
+                        <button id="prev-question-btn" class="prev-question-btn btn btn-outline-secondary me-2"
+                            onclick="prevQ()">
                             &lt;
                         </button>
-                        <div class="s-image-container" dropzone="true" id="s-image-container" style="position:relative; min-height:120px; cursor:pointer; border:2px dashed #aaa; border-radius:8px;">
+                        <div class="s-image-container" dropzone="true" id="s-image-container"
+                            style="position:relative; min-height:120px; cursor:pointer; border:2px dashed #aaa; border-radius:8px;">
                             <img src="" id="s-image" style="max-width: 100%; max-height: 100%; display: block;">
                             <input type="file" id="imageFile" class="d-none">
-                            <button id="remove-image-btn" type="button" class="btn btn-sm btn-danger" style="position:absolute; top:5px; right:5px; z-index:2;">Remove</button>
+                            <button id="remove-image-btn" type="button" class="btn btn-sm btn-danger"
+                                style="position:absolute; top:5px; right:5px; z-index:2;">Remove</button>
+                            <button id="generate-image-btn" type="button" class="btn btn-sm btn-warning"
+                                style="position:absolute; top:5px; right:100px; z-index:2;">Generate Image</button>
                         </div>
-                        <button id="next-question-btn" class="next-question-btn btn btn-outline-secondary ms-2" onclick="nextQ()">
+                        <button id="next-question-btn" class="next-question-btn btn btn-outline-secondary ms-2"
+                            onclick="nextQ()">
                             &gt;
                         </button>
                     </div>
@@ -133,7 +137,7 @@
 
                 </div>
 
-                <hr/>
+                <hr />
 
                 <div class="row">
                     <div class="col-12 col-md-6">
@@ -175,9 +179,84 @@
     </div>
 
 
+    <!-- Question Image Generator Modal -->
+    <div class="modal fade" dir="rtl" id="qImageGenModal" tabindex="-1" aria-labelledby="qImageGenModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qImageGenModalLabel">توليد صورة السؤال</h5>
+                    <button type="button" class="btn-close me-auto ms-0" data-bs-dismiss="modal"
+                        aria-label="إغلاق"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="qImageGenForm">
+                        <div class="mb-3">
+                            <label for="qImageInput" class="form-label">اختر صورة</label>
+                            <input type="file" class="form-control" id="qImageInput" accept="image/*">
+                            <img id="qImagePreview" src=""
+                                style="max-width:100%;max-height:200px;display:none;margin-top:10px;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="qText" class="form-label">نص السؤال</label>
+                            <textarea class="form-control" id="qText" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="qFormat" class="form-label">تنسيق السؤال</label>
+                            <select class="form-select" id="qFormat">
+                                <option value="format-1" selected>تنسيق 1 (اختياران)</option>
+                                <option value="format-2">تنسيق 2 (ثلاثة اختيارات)</option>
+                                <option value="format-3">تنسيق 3 (أربعة اختيارات)</option>
+                                <option value="format-4" selected>تنسيق 4 (أربعة اختيارات مع سؤالين)</option>
+                                <option value="format-5">تنسيق 5 (أربعة اختيارات مع سؤال واحد للأول)</option>
+                                <option value="format-6">تنسيق 6 (أربعة اختيارات مع سؤال واحد للثاني)</option>
+                                <option value="format-7">تنسيق 7 (ثلاثة اختيارات مع سؤال واحد للأول)</option>
+                                <option value="format-8">تنسيق 8 (ثلاثة اختيارات مع سؤال واحد للثاني)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الاختيارات</label>
+                            <div class="row">
+                                <div class="col-12 mb-2"><input type="text" class="form-control"
+                                        id="qQuestionChoice1and2" placeholder="السؤال 1"></div>
+                                <div class="col-6 mb-2"><input type="text" class="form-control" id="qChoice1"
+                                        placeholder="اختيار 1"></div>
+                                <div class="col-6 mb-2"><input type="text" class="form-control" id="qChoice2"
+                                        placeholder="اختيار 2"></div>
+                                <div class="col-12 mb-2"><input type="text" class="form-control"
+                                        id="qQuestionChoice3and4" placeholder="السؤال 2"></div>
+                                <div class="col-6 mb-2"><input type="text" class="form-control" id="qChoice3"
+                                        placeholder="اختيار 3"></div>
+                                <div class="col-6 mb-2"><input type="text" class="form-control" id="qChoice4"
+                                        placeholder="اختيار 4"></div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="qImageGenResult" style="margin-top:20px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="qImageGenBtn" class="btn btn-primary">توليد الصورة</button>
+                    <button type="button" id="qImageGenSelectBtn" class="btn btn-success" style="display:none;">اختيار
+                        الصورة وإغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a button to open the modal somewhere in your UI -->
+    <button class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#qImageGenModal">
+        Generate Question Image
+    </button>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="services.js"></script>
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="image_q_generator.js"></script>
     <script>
         // Sidebar toggle functionality
         document.getElementById('sidebarToggle').addEventListener('click', function () {
