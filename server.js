@@ -1,245 +1,319 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path'); // Import path to manage file paths
-const fileUpload = require('express-fileupload');
-const dotenv = require('dotenv');
-const simpleGit = require('simple-git');
+const express = require("express");
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const http = require("node:http");
+const https = require("node:https");
+const fileUpload = require("express-fileupload");
+const {
+  createAccess,
+  createTLS,
+  networkAddresses,
+  requestSafety,
+  privateAddress,
+  loopback,
+} = require("./studio/network");
+const { createMobile, audioExtension } = require("./studio/mobile");
+const { createPublication } = require("./studio/publication");
 
-dotenv.config();
+const ROOT = __dirname;
+require("dotenv").config({ path: path.join(ROOT, ".env") });
 
-const app = express();
-const port = 5080;
+function createApp(options = {}) {
+  const root = options.root || ROOT;
+  const app = express();
+  const access = createAccess();
+  const wrap = (action) => (req, res, next) =>
+    Promise.resolve(action(req, res, next)).catch(next);
+  const dbPath = path.join(root, "db.json");
+  const readDatabase = () => JSON.parse(fs.readFileSync(dbPath, "utf8"));
+  const writeDatabase = (data) => {
+    const temporary = path.join(
+      root,
+      ".studio",
+      "database-" + crypto.randomUUID() + ".tmp",
+    );
+    fs.mkdirSync(path.dirname(temporary), { recursive: true });
+    fs.writeFileSync(temporary, JSON.stringify(data, null, 2));
+    fs.renameSync(temporary, dbPath);
+  };
+  const sync = () =>
+    fs.writeFileSync(
+      path.join(root, "docs", "db.js"),
+      "let database = " + JSON.stringify(readDatabase()) + ";",
+    );
+  const publication = createPublication({
+    root,
+    sync,
+    ...(options.gitFactory ? { gitFactory: options.gitFactory } : {}),
+  });
+  function connectionInfo(req, requestedAddress) {
+    const addresses = networkAddresses().sort(
+      (a, b) =>
+        Number(!a.address.startsWith("192.168.")) -
+        Number(!b.address.startsWith("192.168.")),
+    );
+    const selected = requestedAddress
+      ? addresses.find((item) => item.address === requestedAddress)
+      : addresses[0];
+    if (requestedAddress && !selected)
+      throw Object.assign(
+        new Error(
+          "Cette adresse réseau n’est plus disponible. Actualisez le QR code.",
+        ),
+        { status: 400 },
+      );
+    const ip = selected?.address || "127.0.0.1";
+    const httpPort = req.secure ? options.port || 5080 : req.socket.localPort;
+    const httpsPort = req.secure
+      ? req.socket.localPort
+      : options.httpsPort || 5443;
+    const httpOrigin = "http://" + ip + ":" + httpPort;
+    const httpsOrigin = "https://" + ip + ":" + httpsPort;
+    return {
+      addresses,
+      address: ip,
+      httpOrigin,
+      httpsOrigin,
+      certificateUrl: httpOrigin + "/studio-certificate.crt",
+      certificateFingerprint: options.tls?.fingerprint || null,
+    };
+  }
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+  app.disable("x-powered-by");
+  app.use(requestSafety);
+  app.use(express.json({ limit: "1mb" }));
+  app.use(
+    fileUpload({
+      limits: { fileSize: 25 * 1024 * 1024, files: 3 },
+      abortOnLimit: true,
+      responseOnLimit: "Le fichier dépasse la limite de 25 Mo.",
+    }),
+  );
+  app.get("/api/health", (req, res) =>
+    res.json({ ok: true, service: "Code Alkhayrat Studio" }),
+  );
+  app.get("/api/connection", access.requireAdmin, (req, res) =>
+    res.json(connectionInfo(req)),
+  );
+  app.get("/studio-certificate.crt", (req, res) => {
+    if (
+      !options.tls ||
+      (!loopback(req.socket.remoteAddress) &&
+        !privateAddress(req.socket.remoteAddress))
+    )
+      return res.sendStatus(404);
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="Code-Alkhayrat-Studio-CA.crt"',
+    );
+    res.type("application/x-x509-ca-cert").send(options.tls.ca);
+  });
 
-app.use(fileUpload());
+  const mobile = createMobile({
+    root,
+    access,
+    connectionInfo,
+    readDatabase,
+    wrap,
+  });
+  mobile.routes(app);
 
-// Serve static files from the "public" directory
-app.use(express.static('./public'));
-
-// use another static directory for the docs
-app.use('/assets', express.static('./docs/assets'));
-
-// Function to read data from db.json
-const readDatabase = () => {
-    const data = fs.readFileSync('db.json', 'utf-8');
-    return JSON.parse(data);
-};
-
-// Function to write data to db.json
-const writeDatabase = (data) => {
-    fs.writeFileSync('db.json', JSON.stringify(data, null, 2));
-};
-
-// GET all series
-app.get('/series', (req, res) => {
+  app.get("/series", access.requireAdmin, (req, res) =>
+    res.json(readDatabase().series),
+  );
+  app.get("/series/:num", access.requireAdmin, (req, res) => {
+    const serie = readDatabase().series.find(
+      (item) => Number(item.num) === Number(req.params.num),
+    );
+    if (!serie) return res.status(404).json({ message: "Série introuvable." });
+    res.json(serie);
+  });
+  app.put("/series/:num", access.requireAdmin, (req, res) => {
     const db = readDatabase();
-    res.json(db.series);
-});
-
-// GET a specific series by number
-app.get('/series/:num', (req, res) => {
-    const db = readDatabase();
-    const seriesNum = parseInt(req.params.num);
-    const series = db.series.find(s => s.num === seriesNum);
-
-    if (!series) {
-        return res.status(404).json({ message: 'Series not found' });
-    }
-    res.json(series);
-});
-
-// PUT (update) a specific series by number
-app.put('/series/:num', (req, res) => {
-    const db = readDatabase();
-    const seriesNum = parseInt(req.params.num);
-    const seriesIndex = db.series.findIndex(s => s.num === seriesNum);
-
-    if (seriesIndex === -1) {
-        return res.status(404).json({ message: 'Series not found' });
-    }
-
-    // Update series with new data from the request body
-    db.series[seriesIndex] = { ...db.series[seriesIndex], ...req.body };
-
-    // Write updated data back to db.json
+    const index = db.series.findIndex(
+      (item) => Number(item.num) === Number(req.params.num),
+    );
+    if (index < 0)
+      return res.status(404).json({ message: "Série introuvable." });
+    if (!Array.isArray(req.body.questions))
+      return res
+        .status(400)
+        .json({ message: "La liste des questions est invalide." });
+    db.series[index] = {
+      ...db.series[index],
+      ...req.body,
+      num: db.series[index].num,
+    };
     writeDatabase(db);
-
-    res.json({ message: 'Series updated successfully', series: db.series[seriesIndex] });
-});
-
-// Create a new series
-app.post('/series', (req, res) => {
+    res.json({ message: "Série enregistrée.", series: db.series[index] });
+  });
+  app.post("/series", access.requireAdmin, (req, res) => {
     const db = readDatabase();
-    const newSeries = req.body;
-
-    // Check if the series number already exists
-    if (db.series.find(s => s.num === newSeries.num)) {
-        return res.status(400).json({ message: 'Series number already exists' });
-    }
-
-    // Add the new series to the database
-    db.series.push(newSeries);
-
-    // Write updated data back to db.json
+    const num = Number(req.body.num);
+    if (
+      !Number.isSafeInteger(num) ||
+      num < 1 ||
+      !Array.isArray(req.body.questions)
+    )
+      return res
+        .status(400)
+        .json({ message: "Numéro de série ou questions non valides." });
+    if (db.series.some((item) => Number(item.num) === num))
+      return res
+        .status(409)
+        .json({ message: "Ce numéro de série existe déjà." });
+    const serie = {
+      num,
+      description: String(req.body.description || ""),
+      questions: req.body.questions,
+    };
+    db.series.push(serie);
     writeDatabase(db);
-
-    res.status(201).json({ message: 'Series created successfully', series: newSeries });
-});
-
-// Middleware to handle file uploads (without multer)
-app.post('/question/assets/upload', (req, res) => {
-    // Log req.files to check if any files were uploaded
-    console.log('Uploaded files:', req.files);
-
-    // Check if request contains files
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    // Access the uploaded files (e.g., image, audio, and audio explanation)
-    const imageFile = req.files.image;
-    const audioFile = req.files.audio;
-    const audioExplanationFile = req.files.audioExplanation;
-
-    // Ensure the directory exists
-    const uploadDir = path.join(__dirname, 'docs/assets/new_series');
-    if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    // Check if image file is provided and move it
-    let imageFileName = '';
-    if (imageFile) {
-        imageFileName = Date.now() + '_' + imageFile.name;
-        imageFile.mv(path.join(uploadDir, imageFileName), (err) => {
-            if (err) {
-                return res.status(500).send('Error saving image: ' + err);
-            }
-        });
-    }
-
-    // Check if audio file is provided and move it
-    let audioFileName = '';
-    if (audioFile) {
-        audioFileName = Date.now() + '_' + audioFile.name;
-        audioFile.mv(path.join(uploadDir, audioFileName), (err) => {
-            if (err) {
-                return res.status(500).send('Error saving audio: ' + err);
-            }
-        });
-    }
-
-    // Check if audio explanation file is provided and move it
-    let audioExplanationFileName = '';
-    if (audioExplanationFile) {
-        audioExplanationFileName = Date.now() + '_' + audioExplanationFile.name;
-        audioExplanationFile.mv(path.join(uploadDir, audioExplanationFileName), (err) => {
-            if (err) {
-                return res.status(500).send('Error saving audio explanation: ' + err);
-            }
-        });
-    }
-
-    // Send a response after all files are uploaded
-    res.status(200).send({
-        message: 'Files uploaded successfully',
-        image: imageFileName ? 'assets/new_series' + '/' + imageFileName : null,
-        audio: audioFileName ? 'assets/new_series' + '/' + audioFileName : null,
-        audioExplanation: audioExplanationFileName ? 'assets/new_series' + '/' + audioExplanationFileName : null
-    });
-});
-
-// delete a series by number
-app.delete('/series/:num', (req, res) => {
+    res.status(201).json({ message: "Série créée.", series: serie });
+  });
+  app.delete("/series/:num", access.requireAdmin, (req, res) => {
     const db = readDatabase();
-    const seriesNum = parseInt(req.params.num);
-    const seriesIndex = db.series.findIndex(s => s.num === seriesNum);
-
-    if (seriesIndex === -1) {
-        return res.status(404).json({ message: 'Series not found' });
-    }
-
-    // Remove the series from the database
-    db.series.splice(seriesIndex, 1);
-
-    // Write updated data back to db.json
+    const index = db.series.findIndex(
+      (item) => Number(item.num) === Number(req.params.num),
+    );
+    if (index < 0)
+      return res.status(404).json({ message: "Série introuvable." });
+    db.series.splice(index, 1);
     writeDatabase(db);
-
-    res.json({ message: 'Series deleted successfully' });
-});
-
-// sync to docs api
-app.post('/sync-to-docs',(req,res) => {
-
-    // write the file
-    fs.writeFileSync('./docs/db.js',`let database = ${JSON.stringify(readDatabase())}`);
-
-    // success message
-    res.json({message: 'synced successfully'});
-
-});
-
-// push to github
-app.post('/push-to-github', async (req, res) => {
-    try {
-        const git = simpleGit();
-
-        // Check for GitHub credentials (SSH key or access token) from the .env file
-        // const githubToken = process.env.GITHUB_TOKEN;
-        const sshKeyPath = process.env.SSH_KEY_PATH;
-
-
-        // Use the GitHub credentials
-        const remoteRepo = `git@github.com:Zadelkhair/CodeAutoecoleAlkhayratBerrechid.git`;
-
-        git.outputHandler((command, stdout, stderr) => {
-            stdout.on('data', (data) => {
-                const message = data.toString();
-                console.log('Progress:', message); // Log progress to the console
-            });
+    res.json({ message: "Série supprimée." });
+  });
+  app.post(
+    "/question/assets/upload",
+    access.requireAdmin,
+    wrap(async (req, res) => {
+      const fields = [
+        ["image", "image"],
+        ["audio", "audio"],
+        ["audioExplanation", "audioExplanation"],
+      ];
+      if (!fields.some(([field]) => req.files?.[field]))
+        return res.status(400).json({ message: "Aucun fichier sélectionné." });
+      const uploads = [];
+      for (const [field, key] of fields) {
+        const file = req.files?.[field];
+        if (!file) continue;
+        if (Array.isArray(file) || file.truncated)
+          return res
+            .status(400)
+            .json({ message: "Un seul fichier par champ, de moins de 25 Mo." });
+        const extension =
+          field === "image"
+            ? {
+                "image/png": "png",
+                "image/jpeg": "jpg",
+                "image/webp": "webp",
+                "image/gif": "gif",
+                "image/avif": "avif",
+              }[file.mimetype]
+            : audioExtension(file.data);
+        if (!extension)
+          return res
+            .status(415)
+            .json({ message: "Format de fichier non pris en charge." });
+        uploads.push({
+          file,
+          key,
+          name: Date.now() + "_" + crypto.randomUUID() + "." + extension,
         });
+      }
+      const directory = path.join(root, "docs", "assets", "new_series");
+      fs.mkdirSync(directory, { recursive: true });
+      await Promise.all(
+        uploads.map((upload) =>
+          upload.file.mv(path.join(directory, upload.name)),
+        ),
+      );
+      const result = { image: null, audio: null, audioExplanation: null };
+      for (const upload of uploads)
+        result[upload.key] = "assets/new_series/" + upload.name;
+      res.status(201).json(result);
+    }),
+  );
+  app.post("/sync-to-docs", access.requireAdmin, (req, res) => {
+    sync();
+    res.json({ message: "Le contenu du site est synchronisé." });
+  });
+  app.get(
+    "/api/git/status",
+    access.requireAdmin,
+    wrap(async (req, res) => res.json(await publication.status())),
+  );
+  app.post(
+    "/api/git/verify",
+    access.requireAdmin,
+    wrap(async (req, res) => {
+      try {
+        res.json(await publication.verify());
+      } catch {
+        res
+          .status(502)
+          .json({
+            message:
+              "Ce PC n’a pas pu confirmer son accès GitHub. Vérifiez la connexion et la clé de déploiement autorisée pour ce dépôt.",
+          });
+      }
+    }),
+  );
+  app.post(
+    "/push-to-github",
+    access.requireAdmin,
+    wrap(async (req, res) => res.json(await publication.publish())),
+  );
 
-        // Add all changes to the staging area
-        await git.add('./*');  // Stages all files (including server.js)
+  app.get("/", (req, res, next) => {
+    if (!access.session(req))
+      return res.status(401).sendFile(path.join(root, "public", "access.html"));
+    next();
+  });
+  app.use(
+    express.static(path.join(root, "public"), { etag: false, maxAge: 0 }),
+  );
+  app.use("/preview", express.static(path.join(root, "docs")));
+  app.use("/assets", express.static(path.join(root, "docs", "assets")));
+  app.use((error, req, res, next) => {
+    if (res.headersSent) return next(error);
+    console.error("Studio:", error.code || error.status || error.name);
+    res
+      .status(error.status || 500)
+      .json({
+        message: error.status
+          ? error.message
+          : "L’action n’a pas pu être terminée. Vos données enregistrées sont conservées.",
+      });
+  });
+  app.locals.close = mobile.close;
+  return app;
+}
 
-        // Commit changes
-        await git.commit('Synced to docs - ' + new Date().toLocaleString());
-
-        // If you have an SSH key, set it up for the push
-        if (sshKeyPath) {
-            git.sshKeyPath = path.resolve(sshKeyPath);
-        }
-
-        // Force push to the origin/main branch
-        await git.push(remoteRepo, 'main', { '--force': null }); // Force push
-
-        // Send success response
-        res.json({ message: 'Pushed successfully' });
-    } catch (error) {
-        console.error('Error pushing to GitHub:', error);
-        res.status(500).json({ error: 'Failed to push to GitHub', details: error.message });
-    }
-});
-
-// Start the server
-app.listen(port, '0.0.0.0',  () => {
-
-    // get LAN ip
-    const os = require('os');
-    const interfaces = os.networkInterfaces();
-    let localIp = 'localhost';
-    for (const interfaceName in interfaces) {
-        const iface = interfaces[interfaceName];
-        for (const alias of iface) {
-            if (alias.family === 'IPv4' && !alias.internal) {
-                localIp = alias.address;
-                break;
-            }
-        }
-    }
-
-    console.log(`Server running at LAN : http://${localIp}:${port}`);
-    console.log(`Localhost : http://127.0.0.1:${port}`);
-});
+function start() {
+  const port = Number(process.env.PORT || 5080);
+  const httpsPort = Number(process.env.HTTPS_PORT || 5443);
+  const tls = createTLS(ROOT);
+  const app = createApp({ root: ROOT, port, httpsPort, tls });
+  const httpServer = http
+    .createServer(app)
+    .listen(port, "0.0.0.0", () =>
+      console.log("Studio : http://localhost:" + port),
+    );
+  const httpsServer = https
+    .createServer({ key: tls.key, cert: tls.cert }, app)
+    .listen(httpsPort, "0.0.0.0", () =>
+      console.log("Téléphone / microphone : https://localhost:" + httpsPort),
+    );
+  const shutdown = () => {
+    app.locals.close();
+    httpServer.close();
+    httpsServer.close();
+  };
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+  return { app, httpServer, httpsServer };
+}
+if (require.main === module) start();
+module.exports = { createApp, start };

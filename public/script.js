@@ -1,790 +1,680 @@
-let mediaRecorder;
-let audioChunks = [];
-let micStream;
-
-// let audio_q = null;
-// let audio_q_e = null;
-// let img_q = null;
-
-let form = {
-    answers: [],
-    audio: null,
-    audio_explination: null,
-    img: null,
-    serie_num: null,
-    question_num: null,
-};
-
+// The existing JSON schema and API routes are intentionally preserved.
+let form = {};
 let series = [];
-
-let selectedSerie = {
-
-};
-
-let selectedQuestion = {
-
-};
-
-let currentQuestionIndex = null;
-
-let questionLoading = (isLoading) => {
-    const loader = document.getElementById('question-loader');
-    if (isLoading) {
-        loader.classList.remove('d-none');
-    } else {
-        loader.classList.add('d-none');
-    }
-}
-
-// Helper to select question by index in selectedSerie.questions
-const selectQuestionByIndex = async (idx) => {
-    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    try {
-        questionLoading(true);
-        if (idx < 0) idx = 0;
-        if (idx >= selectedSerie.questions.length) idx = selectedSerie.questions.length - 1;
-        currentQuestionIndex = idx;
-        await selectQuestion(selectedSerie.questions[idx].num);
-        questionLoading(false);
-
-        // Update sidebar highlight
-        document.querySelectorAll('.list-questions i').forEach((el) => {
-            el.classList.remove('selected');
-        });
-        const num = selectedSerie.questions[idx].num;
-        const sidebarItem = document.querySelector('.list-questions i[value="' + num + '"]');
-        if (sidebarItem) sidebarItem.classList.add('selected');
-    }
-    catch (error) {
-        console.error('Error selecting question by index:', error);
-        questionLoading(false)
-    }
-}
-
-const toggleRecording = async (button, audioPlayer, container, callBack) => {
-    if (button.classList.contains('recording')) {
-        // Stop recording
-        mediaRecorder.stop();
-        micStream.getTracks().forEach(track => track.stop());
-
-        // Remove the .recording class and reset button text
-        button.classList.remove('recording');
-        button.textContent = '';
-        container.classList.remove('recording');
-    } else {
-        try {
-            // Request access to the user's microphone
-            micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-            // Initialize MediaRecorder for recording
-            mediaRecorder = new MediaRecorder(micStream);
-            mediaRecorder.start();
-            audioChunks = [];
-
-            // Add the .recording class and change button text
-            button.classList.add('recording');
-            button.textContent = 'R';
-            container.classList.add('recording');
-
-            // Collect audio data into chunks
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
-            };
-
-            // Handle stopping and processing audio
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                audioPlayer.src = audioUrl;
-
-                callBack && callBack(audioUrl);
-            };
-        } catch (error) {
-            alert('Error accessing the microphone');
-            console.error(error);
-        }
-    }
-};
-
-// Event Listeners for Question Audio
-document.getElementById('record-question-audio').addEventListener('click', () => {
-    const recordButton = document.getElementById('record-question-audio');
-    const audioPlayer = document.getElementById('question-audio-player');
-    const container = document.getElementById('s-audio');
-    toggleRecording(recordButton, audioPlayer, container, (url) => {
-        form.audio = url;
-    });
-});
-
-// Event Listeners for Explanation Audio
-document.getElementById('record-explanation-audio').addEventListener('click', () => {
-    const recordButton = document.getElementById('record-explanation-audio');
-    const audioPlayer = document.getElementById('explanation-audio-player');
-    const container = document.getElementById('s-audio-explanation');
-    toggleRecording(recordButton, audioPlayer, container, (url)=>{
-        form.audio_explination = url;
-    });
-});
-
-const selectQuestion = async (num) => {
-    // get question
-    let question = selectedSerie.questions.find(question => question.num == num) ?? {};
-
-    selectedQuestion = question;
-
-    form = {
-        answer: [],
-        audio: null,
-        audio_explination: null,
-        img: null,
-        serie_num: null,
-        question_num: null,
-    }
-
-    if (!question) return;
-
-    // fill form
-    form.serie_num = selectedSerie.num;
-    form.question_num = question.num;
-    form.img = question.img;
-    form.audio = question.audio;
-    form.audio_explination = question.audio_explination;
-    form.answer = question.answer;
-
-    // selectedSerie-num selectedQuestion-num
-    document.getElementById('selectedSerie-num').textContent = selectedSerie.num;
-    document.getElementById('selectedQuestion-num').textContent = question.num;
-
-    // set image
-    let img = document.getElementById('s-image');
-    let imgPromise = new Promise((resolve) => {
-        if (form.img) {
-            img.onload = () => {
-                resolve();
-                console.log("image loaded");
-            };
-            img.onerror = () => {
-                resolve();
-                console.log("image not loaded something wrong");
-            };
-            img.src = form.img;
-        } else {
-            img.src = "";
-            resolve();
-        }
-    });
-
-    // set answers
-    let checks = document.querySelectorAll('#answer-checks input[type="checkbox"]');
-    checks.forEach((check) => {
-        check.checked = false;
-    });
-    form.answer = []; // Clear previous answers
-    form.answer = question.answer ? [...question.answer] : [];
-    form.answer.forEach((answer) => {
-        let check = document.querySelector(`#answer-checks input[value="${answer}"]`);
-        if (check) {
-            check.checked = true;
-        }
-    });
-
-    // Re-attach change listeners to checkboxes
-    checks.forEach((check) => {
-        check.onchange = (e) => {
-            let value = e.target.value;
-            if (e.target.checked) {
-                if (!form.answer.includes(value)) form.answer.push(value);
-            } else {
-                form.answer = form.answer.filter((answer) => answer != value);
-            }
-        };
-    });
-
-    // set audio
-    let audio = document.getElementById('question-audio-player');
-    let audioPromise = new Promise((resolve) => {
-        if (form.audio) {
-            audio.onloadeddata = () => {
-                resolve()
-                console.log("audio loaded");
-            };
-            audio.onerror = () => {
-                resolve();
-                console.log("audio not loaded something wrong");
-            };
-            audio.src = form.audio;
-        } else {
-            audio.src = "";
-            resolve();
-        }
-    });
-
-    // set audio explanation
-    let audio_explination = document.getElementById('explanation-audio-player');
-    let audioExplPromise = new Promise((resolve) => {
-        if (form.audio_explination) {
-            audio_explination.onloadeddata = () => {
-                resolve();
-                console.log("audio explanation loaded");
-            };
-            audio_explination.onerror = () => {
-                resolve();
-                console.log("audio explanation not loaded something wrong");
-            };
-            audio_explination.src = form.audio_explination;
-        } else {
-            audio_explination.src = "";
-            resolve();
-        }
-    });
-
-    // set currentQuestionIndex
-    currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == num);
-
-    // Wait for all assets to load
-    await Promise.all([imgPromise, audioPromise, audioExplPromise]);
-
-    console.log("Assets loaded successfully");
-};
-
-const selectSerie = (num) => {
-
-    if(num == null) {
-        selectedSerie = {};
-        selectedQuestion = {};
-        form = {
-            answer: [],
-            audio: null,
-            audio_explination: null,
-            img: null,
-            serie_num: null,
-            question_num: null,
-        }
-
-        document.getElementById('selectedSerie-num').textContent = "";
-        document.getElementById('selectedQuestion-num').textContent = "";
-        document.getElementById('s-image').src = "";
-        document.getElementById('question-audio-player').src = "";
-        document.getElementById('explanation-audio-player').src = "";
-        document.getElementById('answer-checks').innerHTML = "";
-        document.getElementById('questionList').innerHTML = "";
-
-        return;
-    }
-    
-    let serie = series.find(serie => serie.num == num) ?? {};
-
-    selectedSerie = serie;
-
-    if (!serie) return;
-
-    let questionsSelect = document.getElementById('questionList');
-
-    questionsSelect.innerHTML = "";
-    serie.questions.forEach((question) => {
-        let option = document.createElement('i');
-        option.classList.add('list-group-item');
-        option.setAttribute('value', question.num);
-        option.textContent = "Question " + question.num;
-        questionsSelect.appendChild(option);
-    });
-
-    // add create question
-    let option = document.createElement('i');
-    option.setAttribute('value', 'create');
-    option.textContent = "Create Question";
-    option.classList.add('list-group-item');
-    questionsSelect.appendChild(option);
-
-    // get all options
-    let options = document.querySelectorAll('.list-questions i');
-
-    // on select question
-    options.forEach((option) => option.addEventListener('click', (e) => {
-        let questionNum = e.target.getAttribute('value');
-        // remove all selected classes from .list-questions i
-        document.querySelectorAll('.list-questions i').forEach((el) => {
-            if (el.classList.contains('selected')) {
-                el.classList.remove('selected');
-            }
-        });
-        if (questionNum == "create") {
-            // TODO: create a question
-            createAQuestion();
-            return;
-        }
-        // add selected class to selected
-        e.target.classList.add('selected');
-        selectQuestion(questionNum);
-    }));
-
-    // select the first question if exists
-    if (serie.questions && serie.questions.length > 0) {
-        selectQuestionByIndex(0);
-        // highlight the first question in the list
-        let firstOption = document.querySelector('.list-questions i[value="' + serie.questions[0].num + '"]');
-        if (firstOption) firstOption.classList.add('selected');
-    }
-}
-
-const watchChanges = () => {
-    // upload audios
-    const uploadExplanationAudio = document.getElementById('upload-explanation-audio');
-    if (uploadExplanationAudio) {
-        uploadExplanationAudio.addEventListener('click', () => {
-            let audioFile = document.getElementById('audioFile2');
-            audioFile.click();
-
-            audioFile.addEventListener('change', (e) => {
-                let file = e.target.files[0];
-                let audio = document.getElementById('explanation-audio-player');
-                audio.src = URL.createObjectURL(file);
-
-                audio.addEventListener('loadeddata', () => {
-                    form.audio_explination = audio.src;
-                    checkAssetsLoaded();
-                });
-            });
-        });
-    }
-
-    const uploadQuestionAudio = document.getElementById('upload-question-audio');
-    if (uploadQuestionAudio) {
-        uploadQuestionAudio.addEventListener('click', () => {
-            let audioFile = document.getElementById('audioFile1');
-            audioFile.click();
-
-            audioFile.addEventListener('change', (e) => {
-                let file = e.target.files[0];
-                let audio = document.getElementById('question-audio-player');
-                audio.src = URL.createObjectURL(file);
-
-                audio.addEventListener('loadeddata', () => {
-                    form.audio = audio.src;
-                    checkAssetsLoaded();
-                });
-            });
-        });
-    }
-
-    // REMOVE this block, handled globally after DOMContentLoaded
-    // document.getElementById('s-image-container').addEventListener('click', () => {
-    //     // get imageFile
-    //     let imageFile = document.getElementById('imageFile');
-    //     imageFile.click();
-    //
-    //     // on change
-    //     imageFile.addEventListener('change', (e) => {
-    //         let file = e.target.files[0];
-    //         let img = document.getElementById('s-image');
-    //         img.src = URL.createObjectURL(file);
-    //
-    //         // on image loaded
-    //         img.addEventListener('load', () => {
-    //             form.img = img.src;
-    //             checkAssetsLoaded();
-    //         });
-    //     });
-    // });
-
-    // update answers
-    // REMOVE this block, now handled in selectQuestion
-    // let checks = document.querySelectorAll('#answer-checks input[type="checkbox"]');
-    // checks.forEach((check) => {
-    //     check.addEventListener('change', (e) => {
-    //         let value = e.target.value;
-    //         if (e.target.checked) {
-    //             form.answer.push(value);
-    //         } else {
-    //             form.answer = form.answer.filter((answer) => answer != value);
-    //         }
-    //     });
-    // });
-
-    
-}
-
-const createASerie = async () => {
-    let serie = {
-        num: parseInt( series[series.length-1].num) + 1,
-        description: '', 
-        questions: []
-    }
-
-    // add serie to series
-    series.push(serie);
-
-    // add serie to select
-    let option = document.createElement('option');
-    option.value = serie.num;
-    option.textContent = "Serie " + serie.num;
-    option.selected = true;
-    document.getElementById('serieSelect').appendChild(option);
-
-    // 
-    services.createSeries(serie);
-
-    let questionsSelect = document.getElementById('questionList');
-
-    questionsSelect.innerHTML = "";
-    
-    // add create question
-    let option2 = document.createElement('i');
-    option2.setAttribute('value', 'create');
-    option2.textContent = "Create Question";
-    option2.classList.add('list-group-item');
-    questionsSelect.appendChild(option2);
-}
-
-const createAQuestion = async () => {
-
-    let nextNum = 1;
-
-    if(selectedSerie.questions.length > 0) {
-        lastQ = selectedSerie.questions[selectedSerie.questions.length - 1];
-        nextNum = parseInt(lastQ.num) + 1;
-    }
-
-    selectedSerie.questions.push(
-        {
-            "num": nextNum,
-            "img": "",
-            "audio": "",
-            "audio_explination": "",
-            "answer": []
-        }
-    );
-
-    selectSerie(selectedSerie.num);
-
-    await services.updateSeries(selectedSerie.num,selectedSerie);
-
-}
-
-// saveQuestion
-const saveQuestion = async () => {
-    let uploadPromises = [];
-
-    // Check if image has changed
-    if (form.img && form.img !== selectedQuestion.img) {
-        uploadPromises.push(services.uploadSeriesAssets(form.img, null, null).then(out => {
-            form.img = out.image;
-        }));
-    }
-
-    // Check if audio has changed
-    if (form.audio && form.audio !== selectedQuestion.audio) {
-        uploadPromises.push(services.uploadSeriesAssets(null, form.audio, null).then(out => {
-            form.audio = out.audio;
-        }));
-    }
-
-    // Check if audio explanation has changed
-    if (form.audio_explination && form.audio_explination !== selectedQuestion.audio_explination) {
-        uploadPromises.push(services.uploadSeriesAssets(null, null, form.audio_explination).then(out => {
-            form.audio_explination = out.audioExplanation;
-        }));
-    }
-
-    console.log('Saving question:', form);
-
-    // Wait for all uploads to complete
-    await Promise.all(uploadPromises);
-
-    console.log('All assets uploaded successfully:', form);
-
-    let question = {
-        num: form.question_num,
-        img: form.img,
-        audio: form.audio,
-        audio_explination: form.audio_explination,
-        answer: form.answer,
-    };
-
-    console.log('Final question data to save:', question);
-
-    // Update question in the series
-    let q = selectedSerie.questions.find(q => q.num == form.question_num);
-    let qi = selectedSerie.questions.indexOf(q);
-
-    console.log('q',q);
-
-    if (q) {
-        selectedSerie.questions[qi] = question;
-
-        console.log(`Updating question: ${q.num} with new data:`, form);
-        
-        // Start loading
-        document.getElementById("saveQuestion").classList.add('loading');
-        document.getElementById("saveQuestion").disabled = true;
-        await services.updateSeries(form.serie_num, selectedSerie);
-        document.getElementById("saveQuestion").classList.remove('loading');
-        document.getElementById("saveQuestion").disabled = false;
-    }
-
-};
-
-document.getElementById("saveQuestion").addEventListener('click',saveQuestion);
-
-const deleteQuestion = async () => {
-    console.log('deleteQuestion');
-    // find the question
-    q = selectedSerie.questions.find((q)=>q.num==form.question_num);
-    qi = selectedSerie.questions.indexOf(q);
-
-    if(q) {
-        selectedSerie.questions.splice(qi,1);
-        selectSerie(selectedSerie.num);
-
-        // start loading
-        document.getElementById("saveQuestion").classList.add('loading');
-        document.getElementById("saveQuestion").disabled = true;
-        await services.updateSeries(form.serie_num,selectedSerie);
-        document.getElementById("saveQuestion").classList.remove('loading');
-        document.getElementById("saveQuestion").disabled = false;
-    }
-}
-
-const deleteSerie = async () => {
-
-    let s = series.find((s)=>s.num==selectedSerie.num);
-    si = series.indexOf(s);
-
-    if(s) {
-
-        // start loading
-        document.getElementById("saveQuestion").classList.add('loading');
-        document.getElementById("saveQuestion").disabled = true;
-        await services.deleteSeries(selectedSerie.num);
-        document.getElementById("saveQuestion").classList.remove('loading');
-        document.getElementById("saveQuestion").disabled = false;
-
-        // remove serie from select
-        let seriesSelect = document.getElementById('serieSelect');
-        let option = document.querySelector(`#serieSelect option[value="${selectedSerie.num}"]`);
-        seriesSelect.removeChild(option);
-
-        series.splice(si,1);
-        selectSerie(null);
-    }
-}
-
-// Add event listeners for prev/next buttons
-const prevQ = async () => {
-    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    if (currentQuestionIndex === null) {
-        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
-    }
-    if (currentQuestionIndex > 0) {
-        questionLoading(true);
-        await saveQuestion();
-        questionLoading(false);
-        selectQuestionByIndex(currentQuestionIndex - 1);
-    }
-};
-
-const nextQ = async () => {
-    if (!selectedSerie.questions || selectedSerie.questions.length === 0) return;
-    if (currentQuestionIndex === null) {
-        currentQuestionIndex = selectedSerie.questions.findIndex(q => q.num == form.question_num);
-    }
-    if (currentQuestionIndex < selectedSerie.questions.length - 1) {
-        questionLoading(true);
-        await saveQuestion();
-        questionLoading(false);
-        selectQuestionByIndex(currentQuestionIndex + 1);
-    }
-}
-
-// Bulk image upload logic for sidebar
+let selectedSerie = {};
+let selectedQuestion = {};
+let currentQuestionIndex = -1;
+let dirty = false;
+let busy = false;
+let mediaRecorder = null;
+let micStream = null;
 let bulkImages = [];
+let toastTimer;
+const byId = (id) => document.getElementById(id);
 
-const bulkDrop = document.getElementById('bulk-image-drop');
-const bulkInput = document.getElementById('bulk-image-input');
-const bulkPreview = document.getElementById('bulk-image-preview');
-const bulkSubmit = document.getElementById('bulk-image-submit');
-const bulkDropText = document.getElementById('bulk-image-drop-text');
-
-// Drag & drop events
-bulkDrop.addEventListener('click', () => bulkInput.click());
-bulkDrop.addEventListener('dragover', e => {
-    e.preventDefault();
-    bulkDrop.style.background = '#e9ecef';
-});
-bulkDrop.addEventListener('dragleave', e => {
-    e.preventDefault();
-    bulkDrop.style.background = '#f8f9fa';
-});
-bulkDrop.addEventListener('drop', e => {
-    e.preventDefault();
-    bulkDrop.style.background = '#f8f9fa';
-    handleBulkFiles(e.dataTransfer.files);
-});
-bulkInput.addEventListener('change', e => {
-    handleBulkFiles(e.target.files);
-});
-
-function handleBulkFiles(fileList) {
-    bulkImages = [];
-    bulkPreview.innerHTML = '';
-    for (let file of fileList) {
-        if (!file.type.startsWith('image/')) continue;
-        bulkImages.push(file);
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.style.width = '40px';
-        img.style.height = '40px';
-        img.style.objectFit = 'cover';
-        img.style.border = '1px solid #ccc';
-        img.style.borderRadius = '4px';
-        bulkPreview.appendChild(img);
-    }
-    bulkSubmit.disabled = bulkImages.length === 0;
-    bulkDropText.style.display = bulkImages.length === 0 ? 'block' : 'none';
+function toast(message, error = false) {
+  const element = byId("studioToast");
+  element.textContent = message;
+  element.classList.toggle("error", error);
+  element.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(
+    () => {
+      element.hidden = true;
+    },
+    error ? 7000 : 4000,
+  );
 }
 
-// Bulk submit logic
-bulkSubmit.addEventListener('click', async () => {
-    if (!selectedSerie || !selectedSerie.num || bulkImages.length === 0) return;
-    bulkSubmit.disabled = true;
-    bulkSubmit.textContent = 'Uploading...';
-
-    let nextNum = 1;
-    if (selectedSerie.questions && selectedSerie.questions.length > 0) {
-        nextNum = parseInt(selectedSerie.questions[selectedSerie.questions.length - 1].num) + 1;
-    }
-
-    for (let i = 0; i < bulkImages.length; i++) {
-        try {
-            // Upload image only, no audio/explanation
-            let out = await services.uploadSeriesAssets(bulkImages[i], null, null);
-            let question = {
-                num: nextNum++,
-                img: out.image,
-                audio: "",
-                audio_explination: "",
-                answer: []
-            };
-            selectedSerie.questions.push(question);
-        } catch (err) {
-            console.error('Failed to upload image:', bulkImages[i], err);
-        }
-    }
-    await services.updateSeries(selectedSerie.num, selectedSerie);
-    selectSerie(selectedSerie.num);
-
-    // Reset UI
-    bulkImages = [];
-    bulkPreview.innerHTML = '';
-    bulkSubmit.disabled = true;
-    bulkSubmit.textContent = 'Submit Bulk Images';
-    bulkDropText.style.display = 'block';
-    alert('Bulk images uploaded and questions created!');
-});
-
-const start = () => {
-
-    let seriesSelect = document.getElementById('serieSelect');
-
-    // ges series
-    services.getSeries().then((data) => {
-        series = data;
-        data.forEach((serie) => {
-            let option = document.createElement('option');
-            option.value = serie.num;
-            option.textContent = "Serie " + serie.num;
-            seriesSelect.appendChild(option);
-        });
-
-        // add create serie
-        let option = document.createElement('option');
-        option.value = "create";
-        option.textContent = "Create Serie";
-        seriesSelect.appendChild(option);
-    });
-
-    // on select serie
-    seriesSelect.addEventListener('change', (e) => {
-        let serieNum = e.target.value;
-        if (serieNum == "create") {
-            // TODO: creaet a new serie
-            createASerie();
-            return;
-        }
-        selectSerie(serieNum);
-    });
+function setDirty(value) {
+  dirty = value;
+  byId("saveStatus").classList.toggle("dirty", value);
+  byId("saveStatus").classList.remove("error");
+  byId("saveStatusText").textContent = value
+    ? "Modifications non enregistrées"
+    : selectedSerie.num != null
+      ? "Toutes les modifications sont enregistrées"
+      : "Sélectionnez une série pour commencer.";
+  checkAssetsLoaded();
+}
+function markDirty() {
+  if (selectedSerie.num != null) setDirty(true);
+}
+function questionLoading(value) {
+  byId("question-loader").classList.toggle("d-none", !value);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    start();
-    watchChanges();
-    checkAssetsLoaded();
-});
+function confirmAction(title, message, label = "Confirmer") {
+  if (byId("confirmDialog").open) return Promise.resolve(false);
+  byId("confirmTitle").textContent = title;
+  byId("confirmMessage").textContent = message;
+  byId("confirmAction").textContent = label;
+  byId("confirmDialog").returnValue = "cancel";
+  byId("confirmDialog").showModal();
+  return new Promise((resolve) => {
+    byId("confirmDialog").addEventListener(
+      "close",
+      () => resolve(byId("confirmDialog").returnValue === "confirm"),
+      { once: true },
+    );
+  });
+}
+async function canNavigate() {
+  if (busy || mediaRecorder?.state === "recording") {
+    toast("Terminez l’enregistrement en cours avant de continuer.", true);
+    return false;
+  }
+  if (!dirty) return true;
+  if (
+    !(await confirmAction(
+      "Enregistrer avant de continuer ?",
+      "Vous avez des modifications non enregistrées. Enregistrez-les pour changer de question sans les perdre.",
+      "Enregistrer et continuer",
+    ))
+  )
+    return false;
+  return saveQuestion();
+}
 
-// Add event listener for "Remove Image" button
-document.getElementById('remove-image-btn').addEventListener('click', (e) => {
-    e.stopPropagation(); // Prevent triggering the image container click event
-    const img = document.getElementById('s-image');
-    img.src = ''; // Clear the image source
-    form.img = null; // Reset the form's image field
-    checkAssetsLoaded();
-});
+function updateImage() {
+  const image = byId("s-image");
+  const present = Boolean(form.img);
+  image.hidden = !present;
+  byId("s-image-container").classList.toggle("has-image", present);
+  byId("imageStatus").textContent = present
+    ? "Image prête · cliquez pour la remplacer"
+    : "Aucune image sélectionnée";
+  byId("remove-image-btn").disabled = !present;
+}
+function updateAnswers() {
+  const answers = form.answer || [];
+  byId("answerHint").textContent = answers.length
+    ? "Réponse" + (answers.length > 1 ? "s" : "") + " : " + answers.join(", ")
+    : "Choisissez les réponses correctes.";
+}
+function updateStats() {
+  byId("totalSeries").textContent = series.length;
+  byId("totalQuestions").textContent = series.reduce(
+    (sum, item) => sum + item.questions.length,
+    0,
+  );
+  byId("questionCount").textContent = selectedSerie.questions?.length || 0;
+}
+function renderQuestionList() {
+  byId("questionList").replaceChildren();
+  const query = byId("questionSearch").value.trim();
+  for (const question of selectedSerie.questions || []) {
+    if (query && !String(question.num).includes(query)) continue;
+    const button = document.createElement("button");
+    button.className = "question-tile";
+    button.textContent = String(question.num).padStart(2, "0");
+    button.dataset.num = question.num;
+    button.setAttribute("aria-label", "Question " + question.num);
+    button.title =
+      !question.img || !question.answer?.length
+        ? "Question " + question.num + " · À compléter"
+        : "Question " + question.num;
+    button.classList.toggle("selected", question.num === selectedQuestion.num);
+    button.classList.toggle(
+      "incomplete",
+      !question.img || !question.answer?.length,
+    );
+    if (question.num === selectedQuestion.num)
+      button.setAttribute("aria-current", "true");
+    button.addEventListener("click", async () => {
+      if (question.num === selectedQuestion.num || !(await canNavigate()))
+        return;
+      selectQuestion(question.num);
+      closeSidebar();
+    });
+    byId("questionList").appendChild(button);
+  }
+  if (!byId("questionList").children.length) {
+    const empty = document.createElement("span");
+    empty.style.cssText =
+      "grid-column:1/-1;font-size:10px;color:#868a7f;padding:10px 0";
+    empty.textContent = selectedSerie.questions?.length
+      ? "Aucun résultat."
+      : "Ajoutez votre première question.";
+    byId("questionList").appendChild(empty);
+  }
+  updateStats();
+}
+function renderSeriesSelect() {
+  const select = byId("serieSelect");
+  select.replaceChildren();
+  const placeholder = new Option("Choisir une série", "");
+  select.add(placeholder);
+  for (const item of series)
+    select.add(
+      new Option(
+        "Série " + item.num + " · " + item.questions.length + " questions",
+        item.num,
+      ),
+    );
+  select.value = selectedSerie.num ?? "";
+}
 
-// Make clicking anywhere in the image container (including the image) open the file selector
-const imageContainer = document.getElementById('s-image-container');
-imageContainer.addEventListener('click', (e) => {
-    if (e.target.id !== 'remove-image-btn') {
-        const imageFile = document.getElementById('imageFile');
-        // Remove previous change handlers to avoid stacking
-        imageFile.value = ""; // Reset file input
-        imageFile.onchange = function (event) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const img = document.getElementById('s-image');
-                img.src = URL.createObjectURL(file);
-                img.onload = () => {
-                    form.img = img.src;
-                    checkAssetsLoaded();
-                };
-            }
-        };
-        imageFile.click();
-    }
-});
+function selectQuestion(num) {
+  selectedQuestion =
+    selectedSerie.questions?.find((item) => String(item.num) === String(num)) ||
+    {};
+  currentQuestionIndex =
+    selectedSerie.questions?.indexOf(selectedQuestion) ?? -1;
+  form = {
+    serie_num: selectedSerie.num,
+    question_num: selectedQuestion.num ?? null,
+    img: selectedQuestion.img || null,
+    audio: selectedQuestion.audio || null,
+    audio_explination: selectedQuestion.audio_explination || null,
+    answer: [...(selectedQuestion.answer || [])],
+  };
+  byId("selectedSerie-num").textContent = selectedSerie.num ?? "—";
+  byId("selectedQuestion-num").textContent = selectedQuestion.num ?? "—";
+  byId("editorPosition").textContent =
+    currentQuestionIndex >= 0
+      ? "Question " +
+        (currentQuestionIndex + 1) +
+        " sur " +
+        selectedSerie.questions.length
+      : "Aucune question sélectionnée";
+  const image = byId("s-image");
+  if (form.img) image.src = form.img;
+  else image.removeAttribute("src");
+  for (const [id, value] of [
+    ["question-audio-player", form.audio],
+    ["explanation-audio-player", form.audio_explination],
+  ]) {
+    const audio = byId(id);
+    audio.pause();
+    if (value) audio.src = value;
+    else audio.removeAttribute("src");
+    audio.load();
+  }
+  document.querySelectorAll("#answer-checks input").forEach((input) => {
+    input.checked = form.answer.includes(input.value);
+    input.disabled = form.question_num == null;
+  });
+  updateImage();
+  updateAnswers();
+  renderQuestionList();
+  setDirty(false);
+  byId("prev-question-btn").disabled = currentQuestionIndex <= 0;
+  byId("next-question-btn").disabled =
+    currentQuestionIndex < 0 ||
+    currentQuestionIndex >= selectedSerie.questions.length - 1;
+}
+function selectSerie(num) {
+  selectedSerie = series.find((item) => String(item.num) === String(num)) || {};
+  byId("serieDescription").value = selectedSerie.description || "";
+  byId("serieDescription").disabled = selectedSerie.num == null;
+  byId("questionSearch").value = "";
+  selectQuestion(selectedSerie.questions?.[0]?.num);
+  renderSeriesSelect();
+}
 
-// Drag-and-drop functionality for the image container
-imageContainer.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    imageContainer.style.backgroundColor = '#e9ecef'; // Highlight dropzone
-});
-imageContainer.addEventListener('dragleave', () => {
-    imageContainer.style.backgroundColor = ''; // Reset dropzone highlight
-});
-imageContainer.addEventListener('drop', (e) => {
-    e.preventDefault();
-    imageContainer.style.backgroundColor = ''; // Reset dropzone highlight
-
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        const img = document.getElementById('s-image');
-        img.src = URL.createObjectURL(file); // Display the dropped image
-        form.img = img.src; // Update the form's image field
-        checkAssetsLoaded();
-    }
-});
-
-// Function to check if all assets are loaded
 function checkAssetsLoaded() {
-    const saveButton = document.getElementById("saveQuestion");
-    // Enable save button if a question is selected
-    if (form.question_num !== null && form.question_num !== undefined) {
-        saveButton.disabled = false;
-    } else {
-        saveButton.disabled = true;
-    }
+  byId("saveQuestion").disabled = busy || selectedSerie.num == null;
+  byId("newQuestion").disabled = busy || selectedSerie.num == null;
+  byId("deleteQuestion").disabled = busy || form.question_num == null;
+  byId("deleteSeries").disabled = busy || selectedSerie.num == null;
+  byId("generate-image-btn").disabled = busy || form.question_num == null;
+  byId("s-image-container").setAttribute(
+    "aria-disabled",
+    String(form.question_num == null),
+  );
+  [
+    "upload-question-audio",
+    "upload-explanation-audio",
+    "record-question-audio",
+    "record-explanation-audio",
+    "phone-question-audio",
+    "phone-explanation-audio",
+  ].forEach((id) => {
+    byId(id).disabled = busy || form.question_num == null;
+  });
+  byId("bulk-image-submit").disabled =
+    busy || selectedSerie.num == null || !bulkImages.length;
+  byId("newSeries").disabled = busy;
+  byId("serieSelect").disabled = busy;
+}
+function setBusy(value) {
+  busy = value;
+  byId("workspace").inert = value;
+  byId("saveQuestion").classList.toggle("loading", value);
+  checkAssetsLoaded();
 }
 
-// Ensure save button is initially disabled
-document.addEventListener('DOMContentLoaded', () => {
-    checkAssetsLoaded();
+async function saveQuestion() {
+  if (busy || selectedSerie.num == null) return false;
+  if (mediaRecorder?.state === "recording") {
+    toast("Arrêtez l’enregistrement audio avant de sauvegarder.", true);
+    return false;
+  }
+  setBusy(true);
+  byId("saveStatusText").textContent = "Enregistrement en cours…";
+  try {
+    const updated = structuredClone(selectedSerie);
+    updated.description = byId("serieDescription").value;
+    if (form.question_num != null) {
+      const question = { ...selectedQuestion, answer: [...form.answer] };
+      for (const [field, resultKey] of [
+        ["img", "image"],
+        ["audio", "audio"],
+        ["audio_explination", "audioExplanation"],
+      ]) {
+        const value = form[field];
+        if (value && value !== selectedQuestion[field]) {
+          const result = await services.uploadSeriesAssets(
+            field === "img" ? value : null,
+            field === "audio" ? value : null,
+            field === "audio_explination" ? value : null,
+          );
+          question[field] = result[resultKey];
+        } else question[field] = value || "";
+      }
+      updated.questions[currentQuestionIndex] = question;
+    }
+    await services.updateSeries(selectedSerie.num, updated);
+    series[series.indexOf(selectedSerie)] = updated;
+    selectedSerie = updated;
+    selectQuestion(form.question_num);
+    renderSeriesSelect();
+    toast("Modifications enregistrées.");
+    return true;
+  } catch (error) {
+    byId("saveStatus").classList.add("error");
+    byId("saveStatusText").textContent =
+      "Échec de l’enregistrement · réessayez";
+    toast(error.message, true);
+    return false;
+  } finally {
+    setBusy(false);
+  }
+}
+async function createASerie() {
+  if (!(await canNavigate())) return;
+  const nextNum =
+    Math.max(0, ...series.map((item) => Number(item.num) || 0)) + 1;
+  const item = { num: nextNum, description: "", questions: [] };
+  setBusy(true);
+  try {
+    await services.createSeries(item);
+    series.push(item);
+    selectSerie(nextNum);
+    toast("Série " + nextNum + " créée. Ajoutez votre première question.");
+  } catch (error) {
+    toast(error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+async function createAQuestion() {
+  if (selectedSerie.num == null || !(await canNavigate())) return;
+  const updated = structuredClone(selectedSerie);
+  const num =
+    Math.max(
+      0,
+      ...updated.questions.map((question) => Number(question.num) || 0),
+    ) + 1;
+  updated.questions.push({
+    num,
+    img: "",
+    audio: "",
+    audio_explination: "",
+    answer: [],
+  });
+  setBusy(true);
+  try {
+    await services.updateSeries(updated.num, updated);
+    series[series.indexOf(selectedSerie)] = updated;
+    selectedSerie = updated;
+    selectQuestion(num);
+    renderSeriesSelect();
+    closeSidebar();
+    toast("Nouvelle question ajoutée.");
+  } catch (error) {
+    toast(error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+async function deleteQuestion() {
+  if (busy || form.question_num == null) return;
+  if (
+    !(await confirmAction(
+      "Supprimer cette question ?",
+      "La question " +
+        form.question_num +
+        " sera retirée de la série. Cette action ne peut pas être annulée dans le studio.",
+      "Supprimer la question",
+    ))
+  )
+    return;
+  const updated = structuredClone(selectedSerie);
+  updated.questions = updated.questions.filter(
+    (question) => question.num !== selectedQuestion.num,
+  );
+  setBusy(true);
+  try {
+    await services.updateSeries(updated.num, updated);
+    series[series.indexOf(selectedSerie)] = updated;
+    selectSerie(updated.num);
+    toast("Question supprimée.");
+  } catch (error) {
+    toast(error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+async function deleteSerie() {
+  if (busy || selectedSerie.num == null) return;
+  if (
+    !(await confirmAction(
+      "Supprimer toute la série ?",
+      "La série " +
+        selectedSerie.num +
+        " et ses " +
+        selectedSerie.questions.length +
+        " questions seront supprimées. Vérifiez que vous disposez d’une sauvegarde.",
+      "Supprimer la série",
+    ))
+  )
+    return;
+  setBusy(true);
+  try {
+    await services.deleteSeries(selectedSerie.num);
+    series = series.filter((item) => item !== selectedSerie);
+    selectSerie(series[0]?.num);
+    toast("Série supprimée.");
+  } catch (error) {
+    toast(error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+async function prevQ() {
+  if (currentQuestionIndex > 0 && (await canNavigate()))
+    selectQuestion(selectedSerie.questions[currentQuestionIndex - 1].num);
+}
+async function nextQ() {
+  if (
+    currentQuestionIndex < (selectedSerie.questions?.length || 0) - 1 &&
+    (await canNavigate())
+  )
+    selectQuestion(selectedSerie.questions[currentQuestionIndex + 1].num);
+}
+
+function chooseImage(file) {
+  if (form.question_num == null) {
+    toast("Sélectionnez ou créez une question pour ajouter une image.", true);
+    return;
+  }
+  if (!file?.type.startsWith("image/")) return;
+  form.img = URL.createObjectURL(file);
+  byId("s-image").src = form.img;
+  updateImage();
+  markDirty();
+}
+byId("s-image-container").addEventListener("click", () => {
+  if (form.question_num != null) byId("imageFile").click();
 });
+byId("s-image-container").addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    byId("s-image-container").click();
+  }
+});
+byId("imageFile").addEventListener("change", (event) => {
+  chooseImage(event.target.files[0]);
+  event.target.value = "";
+});
+byId("s-image-container").addEventListener("dragover", (event) =>
+  event.preventDefault(),
+);
+byId("s-image-container").addEventListener("drop", (event) => {
+  event.preventDefault();
+  chooseImage(event.dataTransfer.files[0]);
+});
+byId("s-image").addEventListener("load", updateImage);
+byId("remove-image-btn").addEventListener("click", () => {
+  form.img = null;
+  byId("s-image").removeAttribute("src");
+  updateImage();
+  markDirty();
+});
+document.querySelectorAll("#answer-checks input").forEach((input) =>
+  input.addEventListener("change", () => {
+    form.answer = [
+      ...document.querySelectorAll("#answer-checks input:checked"),
+    ].map((item) => item.value);
+    updateAnswers();
+    markDirty();
+  }),
+);
+byId("serieDescription").addEventListener("input", markDirty);
+byId("questionSearch").addEventListener("input", renderQuestionList);
+byId("serieSelect").addEventListener("change", async (event) => {
+  const num = event.target.value;
+  if (await canNavigate()) selectSerie(num);
+  else event.target.value = selectedSerie.num ?? "";
+});
+byId("newSeries").addEventListener("click", createASerie);
+byId("newQuestion").addEventListener("click", createAQuestion);
+byId("saveQuestion").addEventListener("click", saveQuestion);
+byId("deleteQuestion").addEventListener("click", deleteQuestion);
+byId("deleteSeries").addEventListener("click", deleteSerie);
+
+for (const [uploadId, inputId, playerId, field, recordId] of [
+  [
+    "upload-question-audio",
+    "audioFile1",
+    "question-audio-player",
+    "audio",
+    "record-question-audio",
+  ],
+  [
+    "upload-explanation-audio",
+    "audioFile2",
+    "explanation-audio-player",
+    "audio_explination",
+    "record-explanation-audio",
+  ],
+]) {
+  byId(uploadId).addEventListener("click", () => byId(inputId).click());
+  byId(inputId).addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    form[field] = URL.createObjectURL(file);
+    byId(playerId).src = form[field];
+    event.target.value = "";
+    markDirty();
+  });
+  byId(recordId).addEventListener("click", async () => {
+    const button = byId(recordId);
+    if (button.classList.contains("recording")) {
+      mediaRecorder.stop();
+      return;
+    }
+    if (mediaRecorder?.state === "recording") {
+      toast("Arrêtez d’abord l’autre enregistrement.", true);
+      return;
+    }
+    try {
+      if (!navigator.mediaDevices?.getUserMedia)
+        throw new Error(
+          "Le microphone nécessite localhost ou une connexion HTTPS.",
+        );
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const chunks = [];
+      mediaRecorder = new MediaRecorder(micStream);
+      const activeRecorder = mediaRecorder;
+      activeRecorder.ondataavailable = (event) => chunks.push(event.data);
+      activeRecorder.onstop = () => {
+        const blob = new Blob(chunks, {
+          type: activeRecorder.mimeType || "audio/webm",
+        });
+        form[field] = URL.createObjectURL(blob);
+        byId(playerId).src = form[field];
+        micStream.getTracks().forEach((track) => track.stop());
+        button.classList.remove("recording");
+        button.querySelector("span").textContent = "Enregistrer";
+        markDirty();
+      };
+      activeRecorder.start();
+      button.classList.add("recording");
+      button.querySelector("span").textContent = "Arrêter";
+    } catch (error) {
+      micStream?.getTracks().forEach((track) => track.stop());
+      toast(error.message || "Impossible d’accéder au microphone.", true);
+    }
+  });
+}
+function handleBulkFiles(files) {
+  bulkImages = [...files].filter((file) => file.type.startsWith("image/"));
+  byId("bulk-image-preview").replaceChildren();
+  for (const file of bulkImages) {
+    const image = document.createElement("img");
+    image.src = URL.createObjectURL(file);
+    image.alt = file.name;
+    byId("bulk-image-preview").appendChild(image);
+  }
+  byId("bulk-image-drop-text").textContent = bulkImages.length
+    ? bulkImages.length + " images sélectionnées"
+    : "Déposer ou choisir des images";
+  checkAssetsLoaded();
+}
+byId("bulk-image-drop").addEventListener("click", () =>
+  byId("bulk-image-input").click(),
+);
+byId("bulk-image-input").addEventListener("change", (event) =>
+  handleBulkFiles(event.target.files),
+);
+byId("bulk-image-drop").addEventListener("dragover", (event) => {
+  event.preventDefault();
+  event.currentTarget.classList.add("dragover");
+});
+byId("bulk-image-drop").addEventListener("dragleave", (event) =>
+  event.currentTarget.classList.remove("dragover"),
+);
+byId("bulk-image-drop").addEventListener("drop", (event) => {
+  event.preventDefault();
+  event.currentTarget.classList.remove("dragover");
+  handleBulkFiles(event.dataTransfer.files);
+});
+byId("bulk-image-submit").addEventListener("click", async () => {
+  if (!bulkImages.length || selectedSerie.num == null || !(await canNavigate()))
+    return;
+  const updated = structuredClone(selectedSerie);
+  let num =
+    Math.max(0, ...updated.questions.map((item) => Number(item.num) || 0)) + 1;
+  setBusy(true);
+  try {
+    for (let index = 0; index < bulkImages.length; index++) {
+      byId("bulk-image-submit").textContent =
+        "Import " + (index + 1) + " / " + bulkImages.length;
+      const output = await services.uploadSeriesAssets(
+        bulkImages[index],
+        null,
+        null,
+      );
+      updated.questions.push({
+        num: num++,
+        img: output.image,
+        audio: "",
+        audio_explination: "",
+        answer: [],
+      });
+    }
+    await services.updateSeries(updated.num, updated);
+    series[series.indexOf(selectedSerie)] = updated;
+    selectSerie(updated.num);
+    handleBulkFiles([]);
+    toast("Images importées. Les nouvelles questions sont prêtes à compléter.");
+  } catch (error) {
+    toast(error.message, true);
+  } finally {
+    byId("bulk-image-submit").textContent = "Importer les images";
+    setBusy(false);
+  }
+});
+
+async function publish(kind) {
+  if (busy) return;
+  if (dirty && !(await canNavigate())) return;
+  if (
+    kind === "push" &&
+    !(await confirmAction(
+      "Publier sur GitHub ?",
+      "Les questions et les médias seront synchronisés puis envoyés sur GitHub. Les autres fichiers, les clés et les réglages privés ne sont pas inclus.",
+      "Publier sur GitHub",
+    ))
+  )
+    return;
+  byId("syncDocs").disabled = byId("publishGithub").disabled = true;
+  setBusy(true);
+  byId("publishStatus").textContent =
+    kind === "sync" ? "Synchronisation en cours…" : "Publication en cours…";
+  try {
+    if (kind === "sync") await services.syncToDocs();
+    else await services.pushToGithub();
+    byId("publishStatus").textContent =
+      kind === "sync"
+        ? "Données synchronisées. Vous pouvez publier."
+        : "Modifications envoyées à GitHub.";
+    toast(
+      kind === "sync"
+        ? "Le contenu du site est synchronisé."
+        : "Modifications envoyées à GitHub.",
+    );
+  } catch (error) {
+    byId("publishStatus").textContent = "Action non terminée. Réessayez.";
+    toast(error.message, true);
+  } finally {
+    byId("syncDocs").disabled = byId("publishGithub").disabled = false;
+    setBusy(false);
+  }
+}
+byId("syncDocs").addEventListener("click", () => publish("sync"));
+byId("publishGithub").addEventListener("click", () => publish("push"));
+function closeSidebar() {
+  byId("sidebar").classList.remove("open");
+  byId("sidebarBackdrop").hidden = true;
+  byId("sidebarToggle").setAttribute("aria-expanded", "false");
+}
+byId("sidebarToggle").addEventListener("click", () => {
+  const open = byId("sidebar").classList.toggle("open");
+  byId("sidebarBackdrop").hidden = !open;
+  byId("sidebarToggle").setAttribute("aria-expanded", String(open));
+});
+byId("sidebarBackdrop").addEventListener("click", closeSidebar);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeSidebar();
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+    event.preventDefault();
+    if (!busy) saveQuestion();
+  }
+});
+window.addEventListener("beforeunload", (event) => {
+  if (dirty || mediaRecorder?.state === "recording") {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+async function start() {
+  questionLoading(true);
+  setBusy(true);
+  try {
+    series = await services.getSeries();
+    selectSerie(series[0]?.num);
+  } catch (error) {
+    byId("serieSelect").replaceChildren(
+      new Option("Chargement impossible", ""),
+    );
+    toast(error.message, true);
+  } finally {
+    questionLoading(false);
+    setBusy(false);
+  }
+}
+start();

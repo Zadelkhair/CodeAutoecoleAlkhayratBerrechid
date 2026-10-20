@@ -3,5 +3,5 @@
 # db.json
 node_modules
 # server.js
-package-lock.json
-package.json
+.studio/
+**/.DS_Store

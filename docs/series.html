@@ -1,68 +1,126 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
-    <title>Series - Code Alkhayrat</title>
-    <meta name="description" content="Explore driving test series at Code Alkhayrat.">
-    <meta name="keywords" content="driving test series, Code Alkhayrat, driving school, Berrechid">
+    <title>سلاسل التدريب - كود الخيرات</title>
+    <meta
+      name="description"
+      content="Explore driving test series at Code Alkhayrat."
+    />
+    <meta
+      name="keywords"
+      content="driving test series, Code Alkhayrat, driving school, Berrechid"
+    />
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-    <link rel="stylesheet" href="./style.css" />
-    <script src="./db.js" ></script>
+    <link rel="stylesheet" href="./modern.css" />
+    <script src="./db.js"></script>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WD7TMXWEJP">
-    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-WD7TMXWEJP"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-WD7TMXWEJP');
+      gtag("config", "G-WD7TMXWEJP");
     </script>
     <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push({
-          'gtm.start':
-            new Date().getTime(), event: 'gtm.js'
-        }); var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-P9DLMBTJ');</script>
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-P9DLMBTJ");
+    </script>
     <!-- End Google Tag Manager -->
   </head>
   <body>
-
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P9DLMBTJ" height="0" width="0"
-        style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-P9DLMBTJ"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <div class="container" >
-
-        <div class="app">
-
-            <!-- header -->
-            <div class="header" >
-                <img src="./logo.png" />
-
-                <a class="home-btn" href="./index.html">
-                    Home
-                </a>
-            </div>
-
-            <div class="controls" id="series" >
-                
-            </div>
-
+    <div class="container">
+      <div class="app">
+        <!-- header -->
+        <div class="header">
+          <a class="brand" href="./index.html"
+            ><span class="brand-mark"
+              ><svg class="icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="2" />
+                <path d="M3 10h6m6 0h6m-9 4v7M5 7h14" /></svg></span
+            ><span
+              ><strong>كود الخيرات</strong><small>CODE ALKHAYRAT</small></span
+            ></a
+          >
+          <a class="home-btn" href="./index.html">الصفحة الرئيسية</a>
         </div>
-        
-
+        <main>
+          <div class="page-heading">
+            <div>
+              <span class="section-kicker"
+                >UN PEU DE PRATIQUE, CHAQUE JOUR</span
+              >
+              <h1>جاهز لحصة اليوم؟</h1>
+              <p>اختر سلسلة، ركّز على الأسئلة، وتعلّم من كل إجابة.</p>
+            </div>
+            <a href="./test.html?examen=true" class="button yellow"
+              >جرّب امتحانًا من 40 سؤالًا <span aria-hidden="true">←</span></a
+            >
+          </div>
+          <div class="library-tools">
+            <label class="search-field"
+              ><span class="sr-only">البحث عن سلسلة</span
+              ><svg class="icon" viewBox="0 0 24 24">
+                <circle cx="10" cy="10" r="6" />
+                <path d="m15 15 5 5" /></svg
+              ><input
+                id="series-search"
+                type="search"
+                placeholder="ابحث برقم السلسلة…"
+                autocomplete="off" /></label
+            ><span
+              class="library-count"
+              id="library-count"
+              aria-live="polite"
+            ></span>
+          </div>
+          <div class="controls" id="series"></div>
+        </main>
+        <footer class="footer">
+          <div class="footer-bottom">
+            <span>خذ وقتك. كل سؤال فرصة جديدة للتعلّم.</span
+            ><a href="./supplementary-training.html">احجز ساعات سياقة إضافية</a>
+          </div>
+        </footer>
+      </div>
     </div>
-    
 
     <script src="./series.js"></script>
-
   </body>
 </html>

@@ -515,6 +515,8 @@ document.getElementById('qImageGenSelectBtn').addEventListener('click', function
     // Optionally update form.img if needed
     if (typeof form !== 'undefined') {
         form.img = imgData;
+        updateImage();
+        markDirty();
     }
     // Hide modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('qImageGenModal'));

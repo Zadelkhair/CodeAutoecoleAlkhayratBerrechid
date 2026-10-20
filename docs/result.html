@@ -1,82 +1,106 @@
 <!doctype html>
-<html lang="en">
-
-<head>
-
-  <title>Test Result - Code Alkhayrat</title>
-  <meta name="description" content="View your driving test results at Code Alkhayrat driving school.">
-  <meta name="keywords" content="test result, driving test, Code Alkhayrat">
-  <!-- don't index -->
-  <meta name="robots" content="noindex">
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./test-result.css" />
-  <script src="./db.js"></script>
-
-</head>
-
-<body>
-
-  <div class="container">
-
-    <div class="app">
-
-      <div class="test-container">
-        <div id="user-wrong-answers" class="user-wrong-answers">
-
-        </div>
-        <div class="test-header">
-          <div class="test-header-content">
-
-            <a id="home-btn" href="./index.html">
-              MENU
-            </a>
-
-            <!-- History feature removed -->
-
-            <div class="test-info">
-              serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - resultat <span
-                id="result">--/--</span>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>نتيجتك والتصحيح - كود الخيرات</title>
+    <link rel="stylesheet" href="./modern.css" />
+    <link rel="stylesheet" href="./session.css" />
+    <script src="./db.js"></script>
+  </head>
+  <body class="session-page result-page">
+    <div class="container">
+      <header class="header">
+        <a class="brand" href="./index.html"
+          ><span class="brand-mark"
+            ><svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="2" />
+              <path d="M3 10h6m6 0h6m-9 4v7M5 7h14" /></svg></span
+          ><span
+            ><strong>كود الخيرات</strong><small>CODE ALKHAYRAT</small></span
+          ></a
+        ><a href="./series.html" class="home-btn"
+          >حصة جديدة <span aria-hidden="true">←</span></a
+        >
+      </header>
+      <main class="app">
+        <section class="result-summary">
+          <div>
+            <span class="section-kicker">CHAQUE ERREUR FAIT PROGRESSER</span>
+            <h1>أحسنت، أكملت خطوتك.</h1>
+            <p id="result-message">راجع إجاباتك. الفهم هو طريقك إلى التقدّم.</p>
+          </div>
+          <div class="score-block">
+            <span id="result">—</span><small>إجابة صحيحة</small>
+          </div>
+        </section>
+        <div class="test-container">
+          <div class="test-header">
+            <div class="test-header-content">
+              <a id="home-btn" href="./series.html">← السلاسل</a>
+              <div class="test-info">
+                <span class="session-label"
+                  >السلسلة <b id="serie-num">—</b></span
+                ><span class="session-label"
+                  >مراجعة السؤال <b id="qustion-num">—</b></span
+                >
+              </div>
             </div>
-
           </div>
-        </div>
-        <div class="test-body">
-          <div class="test-media">
-            <img id="result-media" src="" />
-          </div>
-          <div class="test-controls">
-            <div class="result-answer-display" id="answer-display1"></div>
-            <div class="result-answer-display" id="answer-display2"></div>
-            <div class="grid-controls">
-              <button class="btn-correction" onclick="prev()">
-                precedent
-              </button>
-              <button class="btn-valider" onclick="next()">
-                suivant
-              </button>
+          <div class="test-body">
+            <div class="test-media">
+              <img id="result-media" alt="صورة السؤال للمراجعة" />
             </div>
-            <button class="btn-explication" id="btn-explication" style="display: none;" onclick="explication()">
-              explication
-            </button>
+            <div class="test-controls">
+              <span class="control-eyebrow">التصحيح</span>
+              <div class="answer-review">
+                <label>إجابتك</label>
+                <div class="result-answer-display" id="answer-display1"></div>
+                <label>الإجابة الصحيحة</label>
+                <div
+                  class="result-answer-display correct"
+                  id="answer-display2"
+                ></div>
+              </div>
+              <div class="grid-controls">
+                <button
+                  class="btn-correction"
+                  onclick="prev()"
+                  id="review-prev"
+                >
+                  السابق</button
+                ><button class="btn-valider" onclick="next()" id="review-next">
+                  التالي
+                </button>
+              </div>
+              <button
+                class="btn-explication"
+                id="btn-explication"
+                style="display: none"
+                onclick="explication()"
+              >
+                استمع إلى الشرح ↗</button
+              ><small class="control-footnote"
+                >راجع السؤال، ثم انتقل إلى التالي.</small
+              >
+            </div>
           </div>
-
         </div>
-
-      </div>
-
+        <section class="mistakes-section">
+          <div>
+            <h2>أسئلة تحتاج إلى مراجعة</h2>
+            <p id="mistake-count">اضغط على رقم السؤال للعودة إليه.</p>
+          </div>
+          <div id="user-wrong-answers" class="user-wrong-answers"></div>
+        </section>
+      </main>
+      <section class="comments-panel">
+        <h2>سؤال أو ملاحظة؟</h2>
+        <div id="comment-section"></div>
+      </section>
     </div>
-
-  </div>
-
-  <!-- comment section -->
-  <div id="comment-section"></div>
-
-  <script src="./result.js"></script>
-
-</body>
-
+    <script src="./result.js"></script>
+  </body>
 </html>

@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font:
+    15px/1.75 "DM Sans",
+    Arial,
+    sans-serif;
+  color: #272b24;
+  background: #f7f8f3;
+}
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #bf9a36;
+  outline-offset: 4px;
+}
+[hidden] {
+  display: none !important;
+}
+.mobile-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 25px 17px;
+}
+.mobile-card {
+  width: min(100%, 450px);
+  background: white;
+  border: 1px solid #e5e7de;
+  border-radius: 22px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 12px 45px #20231f06;
+}
+.mobile-brand {
+  display: block;
+  text-decoration: none;
+  color: #272b24;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.mobile-brand > span {
+  display: inline-block;
+  background: #fbf3d9;
+  color: #8f762d;
+  border: 1px solid #eee3bc;
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.mobile-symbol {
+  margin: 28px auto 20px;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  background: #fbf3d9;
+  color: #94772a;
+  font-size: 30px;
+}
+.mobile-card h1 {
+  font-size: 27px;
+  line-height: 1.4;
+  letter-spacing: -0.8px;
+  margin: 9px 0 15px;
+}
+.mobile-card p {
+  color: #72786b;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.mobile-eyebrow {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: #89917e;
+  font-weight: 500;
+}
+.mobile-note {
+  font-size: 10px !important;
+  margin: 27px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7de;
+}
+.mobile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: #272b24;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 46px;
+  padding: 12px 15px;
+  text-decoration: none;
+  margin-top: 12px;
+}
+.mobile-button.secondary {
+  border-color: #e0e4d7;
+  color: #72786b;
+  background: white;
+  font-size: 11px;
+}
+.mobile-button:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+.record-control {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 25px 0 20px;
+  gap: 7px;
+}
+.record-control > button {
+  display: grid;
+  place-items: center;
+  background: #fcf0ec;
+  color: #bc5a48;
+  border: 1px solid #efd5cc;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.record-control > button.recording {
+  background: #bf4935;
+  color: white;
+  animation: record-pulse 1.2s infinite;
+}
+#recordTimer {
+  font-variant-numeric: tabular-nums;
+  font-size: 21px;
+  font-weight: 500;
+}
+.record-control small {
+  font-size: 10px;
+  color: #89917e;
+}
+#recordPreview {
+  width: 100%;
+  height: 40px;
+  margin: 4px 0 8px;
+}
+.mobile-status {
+  font-size: 12px !important;
+  padding: 5px 0;
+  margin-bottom: 0;
+  color: #547844 !important;
+}
+.error {
+  color: #aa4836 !important;
+}
+.secure-advice {
+  border: 1px solid #ecddaf;
+  border-radius: 12px;
+  background: #fffaf0;
+  padding: 16px;
+  margin: 20px 0;
+  text-align: left;
+  font-size: 12px;
+}
+.secure-advice > strong {
+  font-size: 12px;
+}
+.secure-advice p {
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+.secure-advice .mobile-button {
+  background: #edc451;
+  color: #272b24;
+  font-size: 11px;
+  min-height: 39px;
+}
+.mobile-help {
+  text-align: left;
+  font-size: 10px;
+  color: #858e79;
+  margin-top: 22px;
+  border-top: 1px solid #e5e7de;
+  padding-top: 17px;
+}
+.mobile-help summary {
+  cursor: pointer;
+}
+.mobile-help p {
+  font-size: 11px;
+}
+.mobile-help a {
+  color: #566c44;
+}
+.mobile-help code {
+  display: block;
+  font-size: 8px;
+  overflow-wrap: anywhere;
+  margin: 12px 0;
+  line-height: 1.8;
+}
+@keyframes record-pulse {
+  50% {
+    box-shadow: 0 0 0 8px #bf493512;
+  }
+}
+@media (max-width: 380px) {
+  .mobile-card {
+    padding: 26px 22px;
+  }
+  .mobile-card h1 {
+    font-size: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}

@@ -1,122 +1,166 @@
 <!doctype html>
-<html lang="en">
-
-<head>
-  <title>Test - Code Alkhayrat</title>
-  <meta name="description" content="Test your driving skills with Code Alkhayrat.">
-  <meta name="keywords" content="driving test, Code Alkhayrat, driving school, Berrechid">
-  <!-- don't index -->
-  <meta name="robots" content="noindex">
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./test-result.css" />
-  <script src="./db.js"></script>
-  
-</head>
-
-<body>
-
-  <div class="container">
-
-    <div class="app">
-
-
-
-      <div class="test-container">
-        <div class="test-header">
-          <div class="test-header-content" >
-            
-            <a id="home-btn" href="./index.html">
-              MENU
-            </a>
-
-            <!-- History feature removed -->
-
-            <div class="test-info" >
-              serie numero <span id="serie-num">--</span> - question <span id="qustion-num">--</span> - <span
-              id="timer">--</span> sec <button 
-                id="pause-btn" onclick="pauseResume()"
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Test · Code Alkhayrat</title>
+    <link rel="stylesheet" href="./test-classic.css" />
+    <script src="./db.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <section
+        class="test-loader"
+        id="test-intro"
+        aria-label="Préparation du test"
+      >
+        <button id="start-btn" type="button" disabled aria-busy="true">
+          <span id="progress-text"
+            ><span id="progress">0%</span
+            ><span id="start-label">Chargement…</span></span
+          >
+          <span id="progress-bar" aria-hidden="true"></span>
+        </button>
+        <span
+          id="media-loader"
+          class="sr-only"
+          role="progressbar"
+          aria-label="Chargement des images et des questions audio"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        ></span>
+        <p id="loader-message" role="status" hidden></p>
+      </section>
+      <section
+        class="test-container"
+        aria-label="Test du code de la route"
+        hidden
+      >
+        <header class="test-header">
+          <div class="test-header-content">
+            <a id="home-btn" href="./index.html">MENU</a>
+            <div class="test-info">
+              <span class="info-group"
+                >série numéro <b id="serie-num">--</b></span
               >
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAX0lEQVR4nO2WQQqAQAwD53ku/v8D1n9EBAUpFDwURM1AbiELpQ0L5s/MwAroUACj0V8Sl5BTS6O/RIW6/CV+WB51wssln9NdXCBygSRcIHpdgcRTX5+RwvaQqdFvPs4Gyhr/h1qOuFIAAAAASUVORK5CYII=">
+              <span class="info-divider" aria-hidden="true">-</span>
+              <span class="info-group"
+                >question <b id="qustion-num">--</b
+                ><span id="question-total" class="sr-only"></span
+              ></span>
+              <span class="info-divider" aria-hidden="true">-</span>
+              <span class="info-group"
+                ><b id="timer" aria-label="Secondes restantes">--</b> sec</span
+              >
+              <button
+                id="pause-btn"
+                type="button"
+                onclick="pauseResume()"
+                aria-label="Mettre en pause"
+                title="Mettre en pause"
+              >
+                Ⅱ
               </button>
             </div>
-            
           </div>
-        </div>
+        </header>
         <div class="test-body">
           <div class="test-media">
-            <img id="test-media" src="" />
+            <img id="test-media" alt="Image de la question actuelle" />
           </div>
           <div class="test-controls">
-            <div class="test-answer-display" id="answer-display">
+            <div
+              class="sr-only"
+              id="answer-display"
+              aria-live="polite"
+              aria-label="Réponses sélectionnées"
+            ></div>
+            <div id="collecting-data" style="display: none">
+              <button id="cd-next-btn" onclick="prev()">précédent</button>
+              <input type="checkbox" id="check1" value="1" /><label for="check1"
+                >1</label
+              >
+              <input type="checkbox" id="check2" value="2" /><label for="check2"
+                >2</label
+              >
+              <input type="checkbox" id="check3" value="3" /><label for="check3"
+                >3</label
+              >
+              <input type="checkbox" id="check4" value="4" /><label for="check4"
+                >4</label
+              >
+              <button id="cd-prev-btn" onclick="next()">suivant</button>
             </div>
-
-            <div id="collecting-data" style="display: none;">
-              <button id="cd-next-btn" onclick="prev()">
-                prev
-              </button>
-              <!-- 4 checkbox -->
-              <input type="checkbox" id="check1" name="check1" value="1">
-              <label for="check1">1</label>
-              <input type="checkbox" id="check2" name="check2" value="2">
-              <label for="check2">2</label>
-              <input type="checkbox" id="check3" name="check3" value="3">
-              <label for="check3">3</label>
-              <input type="checkbox" id="check4" name="check4" value="4">
-              <label for="check4">4</label>
-              <button id="cd-prev-btn" onclick="next()">
-                suiv
-              </button>
-              <br />
-              <!-- <button onclick="pauseResume()">pause</button> -->
-            </div>
-
-            <button class="btn-correction" onclick="clearAnswer()">Correction</button>
+            <button
+              class="btn-correction"
+              type="button"
+              onclick="clearAnswer()"
+            >
+              Correction
+            </button>
             <div class="test-answers" id="test-answers">
-              <button id="btn1" onclick="checkAnswer('1','btn1')">1</button>
-              <button id="btn2" onclick="checkAnswer('2','btn2')">2</button>
-              <button id="btn3" onclick="checkAnswer('3','btn3')">3</button>
-              <button id="btn4" onclick="checkAnswer('4','btn4')">4</button>
+              <button
+                id="btn1"
+                type="button"
+                aria-pressed="false"
+                onclick="checkAnswer('1','btn1')"
+              >
+                1
+              </button>
+              <button
+                id="btn2"
+                type="button"
+                aria-pressed="false"
+                onclick="checkAnswer('2','btn2')"
+              >
+                2
+              </button>
+              <button
+                id="btn3"
+                type="button"
+                aria-pressed="false"
+                onclick="checkAnswer('3','btn3')"
+              >
+                3
+              </button>
+              <button
+                id="btn4"
+                type="button"
+                aria-pressed="false"
+                onclick="checkAnswer('4','btn4')"
+              >
+                4
+              </button>
             </div>
-            <button class="btn-valider" onclick="validate()">Valider</button>
+            <button class="btn-valider" type="button" onclick="validate()">
+              Valider
+            </button>
           </div>
-
-          <!-- #pause-screen -->
-           <div id="pause-screen" style="display: none;">
-            <img src="./image.png" alt="Pause">
-            <div class="pause-screen">
-              <div class="pause-content">
-                <h2>Pause <span id="pause-serie-info" ></span> </h2>
-                <p>Do you want to resume the test?</p>
-                <div>
-                  <button onclick="pauseResume()">Resume</button>
-                  <button class="btn-end" onclick="endSerie()">Stop</button>
-                </div>
-              </div>
-            </div>
-           </div>
         </div>
-
+      </section>
+      <div
+        id="pause-screen"
+        style="display: none"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pause-title"
+      >
+        <div class="pause-content">
+          <span class="pause-symbol" aria-hidden="true">Ⅱ</span>
+          <h1 id="pause-title">Pause</h1>
+          <p id="pause-serie-info"></p>
+          <p>Reprenez le test quand vous êtes prêt.</p>
+          <div>
+            <button type="button" onclick="pauseResume()">Reprendre</button
+            ><button type="button" class="btn-end" onclick="endSerie()">
+              Terminer le test
+            </button>
+          </div>
+        </div>
       </div>
-
-      <button id="start-btn">
-        <span 
-          id="progress-text"
-        >
-          <span id="progress">0%</span> 
-          Commencer
-        </span>
-        <div id="progress-bar"></div>
-      </button>
-    </div>
-
+    </main>
     <script src="./test.js"></script>
-
-    <!-- <script src="./collecting-data.js"></script> -->
-
-</body>
-
+  </body>
 </html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Enregistrer un audio · Code Alkhayrat</title>
+    <link rel="stylesheet" href="mobile.css" />
+  </head>
+  <body class="mobile-page">
+    <main class="mobile-card">
+      <span class="mobile-brand">Code Alkhayrat <span>STUDIO</span></span
+      ><span class="mobile-symbol">♪</span
+      ><span class="mobile-eyebrow" id="recordContext">CONNEXION AU PC</span>
+      <h1 id="recordTitle">Votre voix, dans la question.</h1>
+      <p>
+        Enregistrez, écoutez, puis envoyez. L’audio apparaîtra dans le studio
+        ouvert sur le PC.
+      </p>
+      <div id="secureAdvice" class="secure-advice" hidden>
+        <strong>Activez le microphone dans le navigateur</strong>
+        <p>
+          Ouvrez la connexion HTTPS ci-dessous et faites confiance au certificat
+          local du studio, ou utilisez l’enregistreur du téléphone puis importez
+          le fichier.
+        </p>
+        <a id="secureRecordLink" class="mobile-button"
+          >Connexion sécurisée ↗</a
+        >
+      </div>
+      <div class="record-control">
+        <button
+          id="recordVoice"
+          aria-label="Commencer l’enregistrement"
+          disabled
+        >
+          ●</button
+        ><span id="recordTimer">00:00</span
+        ><small id="recordHint">Chargement du lien…</small>
+      </div>
+      <audio id="recordPreview" controls hidden></audio
+      ><input
+        type="file"
+        id="nativeVoice"
+        accept="audio/*"
+        capture
+        hidden
+      /><button id="chooseVoice" class="mobile-button secondary" disabled>
+        Enregistreur du téléphone / importer</button
+      ><button id="submitVoice" class="mobile-button" disabled>
+        Envoyer au PC <span>↑</span>
+      </button>
+      <p id="recordMessage" role="status" class="mobile-status"></p>
+      <details class="mobile-help">
+        <summary>Connexion HTTPS et certificat local</summary>
+        <p>
+          Au premier accès, faites confiance au certificat de votre studio. Sur
+          iPhone, après l’installation du profil, activez la confiance dans
+          Réglages → Général → Informations → Réglages des certificats. Vérifiez
+          l’empreinte avec celle affichée sur le PC.
+        </p>
+        <a id="recordCertificate" download>Télécharger le certificat</a
+        ><code id="recordFingerprint"></code>
+      </details>
+      <p class="mobile-note">
+        Même Wi-Fi que le PC · Lien valable 15 minutes<br />25 Mo maximum ·
+        Votre microphone reste sous votre contrôle.
+      </p>
+    </main>
+    <script src="record.js"></script>
+  </body>
+</html>
