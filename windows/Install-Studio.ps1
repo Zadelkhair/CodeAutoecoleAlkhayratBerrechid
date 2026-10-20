@@ -58,7 +58,7 @@ $gitBase = @('-c', ('safe.directory=' + $Root))
 & $git @gitBase config core.sshCommand $sshCommand
 & $git @gitBase config user.name 'zad'
 & $git @gitBase config user.email 'abdo.zad.raja2@gmail.com'
-& $git @gitBase config core.autocrlf false
+& $git @gitBase config core.autocrlf true
 & $git @gitBase remote set-url origin 'git@github.com:Zadelkhair/CodeAutoecoleAlkhayratBerrechid.git'
 if ($LASTEXITCODE -ne 0) { throw 'Git configuration failed.' }
 & icacls $Root /setowner $account | Out-Null
