@@ -10,7 +10,13 @@ if (!(Test-Path $key)) {
     if ($process.ExitCode -ne 0) { throw 'SSH key creation failed' }
 }
 $account = $env:COMPUTERNAME + '\' + $TargetUser
-& icacls $key /inheritance:r /grant:r ($account + ':R') '*S-1-5-18:F' '*S-1-5-32-544:F' | Out-Null
-if ($LASTEXITCODE -ne 0) { throw 'Unable to restrict the private key permissions' }
-& icacls $key /setowner $account | Out-Null
+$acl = New-Object Security.AccessControl.FileSecurity
+$acl.SetAccessRuleProtection($true, $false)
+$acl.SetOwner((New-Object Security.Principal.NTAccount($account)))
+$acl.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($account, 'Read', 'Allow')))
+foreach ($sid in @('S-1-5-18', 'S-1-5-32-544')) {
+    $identity = New-Object Security.Principal.SecurityIdentifier($sid)
+    $acl.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($identity, 'FullControl', 'Allow')))
+}
+Set-Acl -LiteralPath $key -AclObject $acl
 [pscustomobject]@{ publicKey = (Get-Content ($key + '.pub') -Raw).Trim(); keyPath = $key } | ConvertTo-Json -Compress
