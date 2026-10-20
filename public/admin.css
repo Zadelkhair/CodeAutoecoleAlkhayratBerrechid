@@ -1404,6 +1404,26 @@ button {
   color: var(--muted);
   font-size: 12px;
 }
+.qr-modes {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 18px;
+}
+.qr-modes button {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 9px;
+}
+.qr-modes button.active {
+  color: var(--ink);
+  background: #fbf3d9;
+  border-color: #e5d598;
+}
 .qr-code-wrap img {
   display: block;
   width: 100%;

@@ -2,9 +2,12 @@ let phoneTransfer = null;
 let phonePoll;
 let phonePollBusy = false;
 let phoneDialogVersion = 0;
+let phoneAudioCode = null;
 
 function resetPhoneDialog(title, description) {
   clearInterval(phonePoll);
+  phoneAudioCode = null;
+  byId("phoneQrModes").hidden = true;
   byId("phoneTitle").textContent = title;
   byId("phoneDescription").textContent = description;
   byId("phoneQr").hidden = true;
@@ -28,6 +31,9 @@ function showPhoneCode(result, voice = false) {
     ? "En attente de l’envoi depuis le téléphone · lien valable 15 min"
     : "Scannez pour autoriser ce téléphone · lien à usage unique, valable 2 min";
   if (voice) {
+    phoneAudioCode = result;
+    byId("phoneQrModes").hidden = false;
+    selectPhoneQrMode("secure");
     byId("phoneCertificateHelp").hidden = false;
     byId("phoneCertificateLink").href = result.connection.certificateUrl;
     byId("phoneCertificateFingerprint").textContent =
@@ -36,6 +42,43 @@ function showPhoneCode(result, voice = false) {
     byId("phoneFallbackLink").href = result.fallbackUrl;
   }
 }
+function selectPhoneQrMode(mode) {
+  if (!phoneAudioCode) return;
+  const result = phoneAudioCode;
+  const choice = {
+    secure: [
+      result.qr,
+      result.url,
+      "Scannez pour enregistrer dans le navigateur · HTTPS et certificat de confiance nécessaires.",
+    ],
+    native: [
+      result.fallbackQr,
+      result.fallbackUrl,
+      "Sans installation de certificat : utilisez l’enregistreur du téléphone puis importez l’audio et envoyez-le au PC.",
+    ],
+    certificate: [
+      result.certificateQr,
+      result.connection.certificateUrl,
+      "Première connexion : scannez pour télécharger le certificat, comparez son empreinte ci-dessous, puis installez-le comme certificat de confiance. Revenez ensuite au QR Microphone HTTPS.",
+    ],
+  }[mode];
+  if (!choice) return;
+  byId("phoneQr").src = choice[0];
+  byId("phoneLink").href = choice[1];
+  byId("phoneTransferStatus").textContent = choice[2];
+  byId("phoneQrModes")
+    .querySelectorAll("button")
+    .forEach((button) => {
+      const selected = button.dataset.qrMode === mode;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  if (mode === "certificate") byId("phoneCertificateHelp").open = true;
+}
+byId("phoneQrModes").addEventListener("click", (event) => {
+  if (event.target.dataset.qrMode)
+    selectPhoneQrMode(event.target.dataset.qrMode);
+});
 byId("openPhone").addEventListener("click", async () => {
   const version = resetPhoneDialog(
     "Le studio, sur votre téléphone.",

@@ -63,12 +63,10 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
     )?.[1];
     const job = jobs.get(tokens.get(digest(token || "")));
     if (!job)
-      return res
-        .status(410)
-        .json({
-          message:
-            "Ce lien a expiré ou a été annulé. Scannez un nouveau QR code sur le PC.",
-        });
+      return res.status(410).json({
+        message:
+          "Ce lien a expiré ou a été annulé. Scannez un nouveau QR code sur le PC.",
+      });
     req.audioJob = job;
     next();
   }
@@ -131,19 +129,15 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
               ),
           )
         )
-          return res
-            .status(404)
-            .json({
-              message:
-                "Sélectionnez une question existante avant de créer le QR code.",
-            });
+          return res.status(404).json({
+            message:
+              "Sélectionnez une question existante avant de créer le QR code.",
+          });
         if (jobs.size >= 100)
-          return res
-            .status(429)
-            .json({
-              message:
-                "Trop de transferts en attente. Annulez les liens inutilisés.",
-            });
+          return res.status(429).json({
+            message:
+              "Trop de transferts en attente. Annulez les liens inutilisés.",
+          });
         const connection = connectionInfo(req, req.body.address);
         const token = randomToken();
         const job = {
@@ -166,6 +160,14 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
           url,
           fallbackUrl,
           qr: await QRCode.toDataURL(url, { width: 300, margin: 2 }),
+          fallbackQr: await QRCode.toDataURL(fallbackUrl, {
+            width: 300,
+            margin: 2,
+          }),
+          certificateQr: await QRCode.toDataURL(connection.certificateUrl, {
+            width: 300,
+            margin: 2,
+          }),
           connection,
         });
       }),
@@ -179,12 +181,10 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
       wrap(async (req, res) => {
         const job = req.audioJob;
         if (job.state !== "pending")
-          return res
-            .status(409)
-            .json({
-              message:
-                "Cet enregistrement a déjà été envoyé. Créez un nouveau lien pour le remplacer.",
-            });
+          return res.status(409).json({
+            message:
+              "Cet enregistrement a déjà été envoyé. Créez un nouveau lien pour le remplacer.",
+          });
         const file = req.files?.audio;
         if (
           !file ||
@@ -192,19 +192,15 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
           file.truncated ||
           file.size > 25 * 1024 * 1024
         )
-          return res
-            .status(400)
-            .json({
-              message: "Choisissez un fichier audio de moins de 25 Mo.",
-            });
+          return res.status(400).json({
+            message: "Choisissez un fichier audio de moins de 25 Mo.",
+          });
         const extension = audioExtension(file.data);
         if (!extension)
-          return res
-            .status(415)
-            .json({
-              message:
-                "Format audio non reconnu. Utilisez un fichier M4A, MP3, WebM, OGG ou WAV.",
-            });
+          return res.status(415).json({
+            message:
+              "Format audio non reconnu. Utilisez un fichier M4A, MP3, WebM, OGG ou WAV.",
+          });
         job.state = "uploading";
         const filename = path.join(directory, `${job.id}.${extension}`);
         try {
@@ -221,12 +217,10 @@ function createMobile({ root, access, connectionInfo, readDatabase, wrap }) {
             wav: "audio/wav",
           }[extension];
           job.state = "ready";
-          res
-            .status(201)
-            .json({
-              ok: true,
-              message: "Audio envoyé. Il va apparaître sur le PC.",
-            });
+          res.status(201).json({
+            ok: true,
+            message: "Audio envoyé. Il va apparaître sur le PC.",
+          });
         } catch (error) {
           job.state = "pending";
           throw error;

@@ -131,6 +131,20 @@ try {
     await pc.locator("#" + button).click();
     await pc.locator("#phoneQr").waitFor({ state: "visible" });
     const url = await pc.locator("#phoneLink").getAttribute("href");
+    await pc.locator('[data-qr-mode="certificate"]').click();
+    assert.ok(
+      (await pc.locator("#phoneLink").getAttribute("href")).endsWith(
+        "/studio-certificate.crt",
+      ),
+    );
+    await pc.locator('[data-qr-mode="native"]').click();
+    assert.ok(
+      (await pc.locator("#phoneLink").getAttribute("href")).startsWith(
+        "http://",
+      ),
+    );
+    await pc.locator('[data-qr-mode="secure"]').click();
+    assert.equal(await pc.locator("#phoneLink").getAttribute("href"), url);
     const before = JSON.stringify(read());
     // A separate, unpaired phone may send only the audio, never edit the database.
     const voiceContext = await browser.newContext({

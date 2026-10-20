@@ -7,8 +7,9 @@ $git = 'C:\Program Files\Git\cmd\git.exe'
 if (!(Test-Path $git)) { throw 'Git for Windows must be installed first.' }
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 # Use a private, pinned LTS runtime. Do not replace Node used by other applications.
-$nodeVersion = 'v24.22.0'
-$nodeName = 'node-' + $nodeVersion + '-win-x64'
+$nodeVersion = if ([Environment]::Is64BitOperatingSystem) { 'v24.22.0' } else { 'v22.23.3' }
+$nodeArch = if ([Environment]::Is64BitOperatingSystem) { 'x64' } else { 'x86' }
+$nodeName = 'node-' + $nodeVersion + '-win-' + $nodeArch
 $runtime = Join-Path $Root '.studio\runtime'
 $nodeFolder = Join-Path $runtime $nodeName
 $node = Join-Path $nodeFolder 'node.exe'
