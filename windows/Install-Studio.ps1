@@ -106,16 +106,7 @@ try {
 if (!(Get-NetFirewallRule -Name 'CodeAlkhayratStudio-LAN' -ErrorAction SilentlyContinue)) {
     New-NetFirewallRule -Name 'CodeAlkhayratStudio-LAN' -DisplayName 'Code Alkhayrat Studio - LAN' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5080,5443 -RemoteAddress LocalSubnet -Profile Any -Program $node | Out-Null
 }
-$shell = New-Object -ComObject WScript.Shell
-$desktop = "C:\Users\$TargetUser\Desktop"
-$shortcutPath = Join-Path $desktop 'Code Alkhayrat Studio.lnk'
-$shortcut = $shell.CreateShortcut($shortcutPath)
-$shortcut.TargetPath = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-$shortcut.Arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $Root 'windows\Open-Studio.ps1') + '" -Root "' + $Root + '"'
-$shortcut.WorkingDirectory = $Root
-$shortcut.IconLocation = $iconPath
-$shortcut.Description = 'Code Alkhayrat - series, questions et enregistrements audio'
-$shortcut.WindowStyle = 7
-$shortcut.Save()
+$shortcutInfo = & (Join-Path $Root 'windows\Create-Shortcut.ps1') -Root $Root -TargetUser $TargetUser
+$shortcutPath = $shortcutInfo.path
 Start-ScheduledTask -TaskName $taskName
 [pscustomobject]@{ root = $Root; shortcut = $shortcutPath; task = $taskName; taskMode = $taskMode; http = 'http://localhost:5080/'; https = 'https://localhost:5443/'; certificate = (Join-Path $Root '.studio\tls\root-ca.crt') } | ConvertTo-Json -Compress
