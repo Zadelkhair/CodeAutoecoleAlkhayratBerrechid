@@ -3,16 +3,33 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 $Root = [System.IO.Path]::GetFullPath($Root)
 if (!(Test-Path (Join-Path $Root 'studio\network.js'))) { throw 'Run this installer from a complete Code Alkhayrat Studio checkout.' }
-$node = 'C:\Program Files\nodejs\node.exe'
 $git = 'C:\Program Files\Git\cmd\git.exe'
-if (!(Test-Path $node) -or !(Test-Path $git)) { throw 'Node.js and Git for Windows must be installed first.' }
+if (!(Test-Path $git)) { throw 'Git for Windows must be installed first.' }
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+# Use a private, pinned LTS runtime. Do not replace Node used by other applications.
+$nodeVersion = 'v24.22.0'
+$nodeName = 'node-' + $nodeVersion + '-win-x64'
+$runtime = Join-Path $Root '.studio\runtime'
+$nodeFolder = Join-Path $runtime $nodeName
+$node = Join-Path $nodeFolder 'node.exe'
+if (!(Test-Path $node)) {
+    New-Item -ItemType Directory -Force $runtime | Out-Null
+    $archive = Join-Path $runtime ($nodeName + '.zip')
+    $baseUrl = 'https://nodejs.org/dist/' + $nodeVersion + '/'
+    $checksums = (Invoke-WebRequest -UseBasicParsing ($baseUrl + 'SHASUMS256.txt')).Content
+    $match = [regex]::Match($checksums, ('(?m)^([a-f0-9]{64})\s+' + [regex]::Escape($nodeName + '.zip') + '\r?$'))
+    if (!$match.Success) { throw 'Official Node.js checksum not found.' }
+    Invoke-WebRequest -UseBasicParsing ($baseUrl + $nodeName + '.zip') -OutFile $archive
+    if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $match.Groups[1].Value) { throw 'Node.js archive checksum mismatch. Installation stopped.' }
+    Expand-Archive -Path $archive -DestinationPath $runtime -Force
+}
 $account = $env:COMPUTERNAME + '\' + $TargetUser
 $privateFolder = "C:\Users\$TargetUser\AppData\Local\CodeAlkhayratStudio"
 $key = Join-Path $privateFolder 'github_ed25519'
 if (!(Test-Path $key)) { throw 'Prepare the repository-specific SSH key and authorize its public key on GitHub first.' }
 Set-Location $Root
-$env:Path = 'C:\Program Files\Git\cmd;C:\Program Files\nodejs;' + $env:Path
-& 'C:\Program Files\nodejs\npm.cmd' ci --omit=dev --no-audit --no-fund
+$env:Path = $nodeFolder + ';C:\Program Files\Git\cmd;' + $env:Path
+& (Join-Path $nodeFolder 'npm.cmd') ci --omit=dev --no-audit --no-fund
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
 & $node -e "require('./studio/network').createTLS(process.cwd());"
 if ($LASTEXITCODE -ne 0) { throw 'Local HTTPS setup failed.' }
@@ -28,11 +45,13 @@ $lines = @($meta.ssh_keys | ForEach-Object { 'github.com ' + $_ })
 $keyForward = $key.Replace('\', '/')
 $knownForward = $knownHosts.Replace('\', '/')
 $sshCommand = '"C:/Windows/System32/OpenSSH/ssh.exe" -i "' + $keyForward + '" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="' + $knownForward + '"'
-& $git config core.sshCommand $sshCommand
-& $git config user.name 'zad'
-& $git config user.email 'abdo.zad.raja2@gmail.com'
-& $git config core.autocrlf false
-& $git remote set-url origin 'git@github.com:Zadelkhair/CodeAutoecoleAlkhayratBerrechid.git'
+$gitBase = @('-c', ('safe.directory=' + $Root))
+& $git @gitBase config core.sshCommand $sshCommand
+& $git @gitBase config user.name 'zad'
+& $git @gitBase config user.email 'abdo.zad.raja2@gmail.com'
+& $git @gitBase config core.autocrlf false
+& $git @gitBase remote set-url origin 'git@github.com:Zadelkhair/CodeAutoecoleAlkhayratBerrechid.git'
+if ($LASTEXITCODE -ne 0) { throw 'Git configuration failed.' }
 & icacls $Root /setowner $account | Out-Null
 & icacls (Join-Path $Root '.git') /setowner $account | Out-Null
 
