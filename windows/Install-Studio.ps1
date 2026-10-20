@@ -19,8 +19,6 @@ if ($LASTEXITCODE -ne 0) { throw 'Local HTTPS setup failed.' }
 
 # Private keys and temporary audio never enter Git or the public website.
 & icacls $Root /grant ($account + ':(OI)(CI)M') /T /C | Out-Null
-& icacls $Root /setowner $account | Out-Null
-& icacls (Join-Path $Root '.git') /setowner $account | Out-Null
 & icacls (Join-Path $Root '.studio') /inheritance:r /grant:r ($account + ':(OI)(CI)F') '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' /T /C | Out-Null
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $meta = Invoke-RestMethod 'https://api.github.com/meta' -Headers @{ 'User-Agent' = 'CodeAlkhayratStudio-Installer' }
@@ -35,6 +33,8 @@ $sshCommand = '"C:/Windows/System32/OpenSSH/ssh.exe" -i "' + $keyForward + '" -o
 & $git config user.email 'abdo.zad.raja2@gmail.com'
 & $git config core.autocrlf false
 & $git remote set-url origin 'git@github.com:Zadelkhair/CodeAutoecoleAlkhayratBerrechid.git'
+& icacls $Root /setowner $account | Out-Null
+& icacls (Join-Path $Root '.git') /setowner $account | Out-Null
 
 # Draw the existing yellow steering-wheel mark and package it as a Windows icon.
 Add-Type -AssemblyName System.Drawing
