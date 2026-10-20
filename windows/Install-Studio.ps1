@@ -37,7 +37,15 @@ if ($LASTEXITCODE -ne 0) { throw 'Local HTTPS setup failed.' }
 
 # Private keys and temporary audio never enter Git or the public website.
 & icacls $Root /grant ($account + ':(OI)(CI)M') /T /C | Out-Null
-& icacls (Join-Path $Root '.studio') /inheritance:r /grant:r ($account + ':(OI)(CI)F') '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' /T /C | Out-Null
+$studioFolder = Join-Path $Root '.studio'
+& icacls $studioFolder /inheritance:r /grant:r ($account + ':(OI)(CI)F') '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'Unable to secure the private studio folder.' }
+# Children inherit the private root ACL. Applying (OI)(CI) recursively to files
+# can leave them without usable permissions on 32-bit Windows.
+Get-ChildItem -LiteralPath $studioFolder -Force | ForEach-Object {
+    & icacls $_.FullName /reset /T /C | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to restore private studio file permissions.' }
+}
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $meta = Invoke-RestMethod 'https://api.github.com/meta' -Headers @{ 'User-Agent' = 'CodeAlkhayratStudio-Installer' }
 $knownHosts = Join-Path $privateFolder 'known_hosts'
