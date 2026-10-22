@@ -1,106 +1,54 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>نتيجتك والتصحيح - كود الخيرات</title>
-    <link rel="stylesheet" href="./modern.css" />
-    <link rel="stylesheet" href="./session.css" />
+    <title>Correction · Code Alkhayrat</title>
+    <link rel="stylesheet" href="./test-classic.css" />
+    <link rel="stylesheet" href="./result-classic.css" />
     <script src="./db.js"></script>
   </head>
-  <body class="session-page result-page">
-    <div class="container">
-      <header class="header">
-        <a class="brand" href="./index.html"
-          ><span class="brand-mark"
-            ><svg class="icon" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="9" />
-              <circle cx="12" cy="12" r="2" />
-              <path d="M3 10h6m6 0h6m-9 4v7M5 7h14" /></svg></span
-          ><span
-            ><strong>كود الخيرات</strong><small>CODE ALKHAYRAT</small></span
-          ></a
-        ><a href="./series.html" class="home-btn"
-          >حصة جديدة <span aria-hidden="true">←</span></a
-        >
-      </header>
-      <main class="app">
-        <section class="result-summary">
-          <div>
-            <span class="section-kicker">CHAQUE ERREUR FAIT PROGRESSER</span>
-            <h1>أحسنت، أكملت خطوتك.</h1>
-            <p id="result-message">راجع إجاباتك. الفهم هو طريقك إلى التقدّم.</p>
-          </div>
-          <div class="score-block">
-            <span id="result">—</span><small>إجابة صحيحة</small>
-          </div>
-        </section>
-        <div class="test-container">
-          <div class="test-header">
-            <div class="test-header-content">
-              <a id="home-btn" href="./series.html">← السلاسل</a>
-              <div class="test-info">
-                <span class="session-label"
-                  >السلسلة <b id="serie-num">—</b></span
-                ><span class="session-label"
-                  >مراجعة السؤال <b id="qustion-num">—</b></span
-                >
-              </div>
+  <body class="result-page">
+    <main class="app">
+      <section class="test-container" aria-label="Correction du test">
+        <p id="mistake-count" class="sr-only"></p>
+        <nav
+          id="user-wrong-answers"
+          class="user-wrong-answers"
+          aria-label="Questions à revoir"
+        ></nav>
+        <header class="test-header">
+          <div class="test-header-content">
+            <a id="home-btn" href="./index.html">MENU</a>
+            <div class="test-info">
+              <span class="info-group">série numéro <b id="serie-num">--</b></span>
+              <span class="info-divider" aria-hidden="true">-</span>
+              <span class="info-group">question <b id="qustion-num">--</b></span>
+              <span class="info-divider" aria-hidden="true">-</span>
+              <span class="info-group">résultat <b id="result">--/--</b></span>
             </div>
           </div>
-          <div class="test-body">
-            <div class="test-media">
-              <img id="result-media" alt="صورة السؤال للمراجعة" />
+        </header>
+        <div class="test-body">
+          <div class="test-media">
+            <img id="result-media" alt="Image de la question à revoir" />
+          </div>
+          <div class="test-controls">
+            <div class="result-answer-display" id="answer-display1" aria-label="Votre réponse"></div>
+            <div class="result-answer-display correct" id="answer-display2" aria-label="Bonne réponse"></div>
+            <div class="grid-controls">
+              <button class="btn-correction" type="button" onclick="prev()" id="review-prev">précédent</button>
+              <button class="btn-valider" type="button" onclick="next()" id="review-next">suivant</button>
             </div>
-            <div class="test-controls">
-              <span class="control-eyebrow">التصحيح</span>
-              <div class="answer-review">
-                <label>إجابتك</label>
-                <div class="result-answer-display" id="answer-display1"></div>
-                <label>الإجابة الصحيحة</label>
-                <div
-                  class="result-answer-display correct"
-                  id="answer-display2"
-                ></div>
-              </div>
-              <div class="grid-controls">
-                <button
-                  class="btn-correction"
-                  onclick="prev()"
-                  id="review-prev"
-                >
-                  السابق</button
-                ><button class="btn-valider" onclick="next()" id="review-next">
-                  التالي
-                </button>
-              </div>
-              <button
-                class="btn-explication"
-                id="btn-explication"
-                style="display: none"
-                onclick="explication()"
-              >
-                استمع إلى الشرح ↗</button
-              ><small class="control-footnote"
-                >راجع السؤال، ثم انتقل إلى التالي.</small
-              >
-            </div>
+            <button class="btn-explication" type="button" id="btn-explication" style="display: none" onclick="explication()">explication</button>
           </div>
         </div>
-        <section class="mistakes-section">
-          <div>
-            <h2>أسئلة تحتاج إلى مراجعة</h2>
-            <p id="mistake-count">اضغط على رقم السؤال للعودة إليه.</p>
-          </div>
-          <div id="user-wrong-answers" class="user-wrong-answers"></div>
-        </section>
-      </main>
-      <section class="comments-panel">
-        <h2>سؤال أو ملاحظة؟</h2>
-        <div id="comment-section"></div>
       </section>
-    </div>
+    </main>
+    <section class="comments-panel" aria-label="Commentaires" dir="rtl">
+      <div id="comment-section"></div>
+    </section>
     <script src="./result.js"></script>
   </body>
 </html>

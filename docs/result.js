@@ -36,7 +36,7 @@ try {
 
 if (!Array.isArray(userAnswers) || !userAnswers.length) {
   document.querySelector("main").innerHTML =
-    '<section class="no-results"><h1>لا توجد نتيجة لعرضها بعد.</h1><p>ابدأ حصة تدريب جديدة، وستجد التصحيح هنا عند الانتهاء.</p><a href="./series.html" class="button yellow">اختر سلسلة للتدرّب</a></section>';
+    '<section class="no-results" dir="rtl" lang="ar"><h1>لا توجد نتيجة لعرضها بعد.</h1><p>ابدأ حصة تدريب جديدة، وستجد التصحيح هنا عند الانتهاء.</p><a href="./series.html">اختر سلسلة للتدرّب</a></section>';
   document.querySelector(".comments-panel").hidden = true;
 }
 
@@ -49,11 +49,12 @@ if (Array.isArray(userAnswers) && userAnswers.length) {
   // if more than 32
   if (correctAnswers > 32) {
     // set background to green
-    resultElement.style.color = "var(--green)";
+    resultElement.style.backgroundColor = "green";
   } else {
     // set background to red
-    resultElement.style.color = "var(--ink)";
+    resultElement.style.backgroundColor = "red";
   }
+  resultElement.style.color = "white";
 
   // loop through user answers and set the wrong answers to #user-wrong-answers
   let wrongAnswers = userAnswers.filter((answer) => !answer.isCorrect);
@@ -175,7 +176,7 @@ if (Array.isArray(userAnswers) && userAnswers.length) {
     script.setAttribute("data-reactions-enabled", "1");
     script.setAttribute("data-emit-metadata", "1");
     script.setAttribute("data-input-position", "bottom");
-    script.setAttribute("data-theme", "light");
+    script.setAttribute("data-theme", "dark");
     script.setAttribute("data-lang", "ar");
     script.setAttribute("crossorigin", "anonymous");
     script.async = true;

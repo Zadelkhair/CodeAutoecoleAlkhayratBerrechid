@@ -1,0 +1,125 @@
+/* Restore the classic black correction screen without changing the test page. */
+.result-page {
+  --canvas: #191919;
+  background: var(--canvas);
+}
+.result-page .app {
+  min-height: 600px;
+}
+.user-wrong-answers {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 16px 30px;
+  border-bottom: 1px solid #ffffff55;
+}
+.user-wrong-answers:empty {
+  display: none;
+}
+.user-wrong-answers button {
+  min-width: 38px;
+  min-height: 38px;
+  padding: 3px 9px;
+  border: 0;
+  border-bottom: 3px solid white;
+  border-radius: 5px;
+  background: #e32e30;
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+}
+.user-wrong-answers button:hover {
+  background: #ce2426;
+}
+.result-answer-display {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background: var(--canvas);
+  color: white;
+  font-size: 26px;
+  font-weight: 600;
+  word-spacing: 10px;
+}
+.result-answer-display.correct {
+  color: #37cf77;
+}
+.result-answer-display.wrong {
+  color: #ff6567;
+}
+.result-answer-display:empty::before {
+  content: "—";
+  color: #aaa;
+}
+.grid-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.test-controls .grid-controls button {
+  padding-inline: 5px;
+  font-size: 18px;
+}
+.test-controls .btn-explication {
+  background: #007bcc;
+  color: white;
+}
+.test-controls .btn-explication:hover {
+  background: #006aaf;
+}
+.test-controls button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.comments-panel {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.no-results {
+  padding: 70px 24px;
+  text-align: center;
+}
+.no-results a {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 6px;
+  background: white;
+  color: #191919;
+}
+@media (max-width: 768px) {
+  .user-wrong-answers {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 14px;
+  }
+  .user-wrong-answers button {
+    flex: none;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 18px;
+  }
+  .result-page .test-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .result-answer-display {
+    min-height: 45px;
+    margin: 0;
+    font-size: 23px;
+  }
+  .grid-controls,
+  .btn-explication {
+    grid-column: 1 / -1;
+  }
+  .result-page .test-info {
+    flex-wrap: wrap;
+  }
+}
