@@ -5752,7 +5752,7 @@
           "num": 4,
           "img": "assets/new_series/1753661721369_image.png",
           "audio": "assets/new_series/1753661721369_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
             "1",
             "3"
@@ -6476,9 +6476,9 @@
           "num": 39,
           "img": "assets/new_series/1754746058804_image.png",
           "audio": "assets/new_series/1754746058804_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "2",
+            "1",
             "4"
           ]
         },
@@ -7173,9 +7173,9 @@
           "num": 32,
           "img": "assets/new_series/1749166970897_image.png",
           "audio": "assets/new_series/1749166970897_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "2"
+            "1"
           ]
         },
         {
@@ -7599,9 +7599,9 @@
           "num": 37,
           "img": "assets/new_series/1749168669096_image.png",
           "audio": "assets/new_series/1749168669096_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "2",
+            "1",
             "4"
           ]
         },
@@ -8052,9 +8052,10 @@
           "num": 4,
           "img": "assets/new_series/1753620646635_image.png",
           "audio": "assets/new_series/1753620646636_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "1"
+            "1",
+            "3"
           ]
         },
         {
@@ -8549,9 +8550,9 @@
           "num": 17,
           "img": "assets/new_series/1753658593056_image.png",
           "audio": "assets/new_series/1753658593056_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "1"
+            "2"
           ]
         },
         {
@@ -8989,8 +8990,9 @@
           "num": 24,
           "img": "assets/new_series/1749177101594_image.png",
           "audio": "assets/new_series/1749177101594_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
+            "1",
             "2"
           ]
         },
@@ -10605,9 +10607,9 @@
           "num": 33,
           "img": "assets/new_series/1753623865451_image.png",
           "audio": "assets/new_series/1753623865452_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "2"
+            "1"
           ]
         },
         {
@@ -12207,8 +12209,9 @@
           "num": 1,
           "img": "assets/new_series/1755107281205_image.png",
           "audio": "assets/new_series/1755107281207_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
+            "2",
             "3"
           ]
         },
@@ -12319,9 +12322,9 @@
           "num": 13,
           "img": "assets/new_series/1755107285013_image.png",
           "audio": "assets/new_series/1755107285014_audio.mp3",
-          "audio_explination": null,
+          "audio_explination": "",
           "answer": [
-            "2"
+            "3"
           ]
         },
         {
@@ -14115,6 +14118,11 @@
           ]
         }
       ]
+    },
+    {
+      "num": 38,
+      "description": "",
+      "questions": []
     }
   ]
 }
