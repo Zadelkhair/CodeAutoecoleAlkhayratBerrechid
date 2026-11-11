@@ -20,6 +20,8 @@ Le PC local est autorisé. Un téléphone du même réseau doit scanner un QR te
 
 Enregistrer sauvegarde la question et la description de la série. Synchroniser prépare l’export du site. Publier synchronise, crée un commit si nécessaire et envoie vers `origin/main`, après confirmation. Seuls `db.json`, `docs/db.js` et `docs/assets/` sont préparés : pas de paramètres privés ou de code sans rapport. Un conflit distant est refusé, sans forçage ; les données et commits locaux sont conservés. « Vérifier l’accès GitHub » effectue un envoi à blanc, sans publication.
 
+Si GitHub contient des mises à jour absentes du PC, la vérification et la publication l’indiquent explicitement au lieu de signaler une clé invalide. Sous Windows, une erreur Git/API gérée est consignée dans le journal sans arrêter le studio ; une vraie sortie du serveur conserve son code d’erreur pour le redémarrage automatique.
+
 ## Téléphone et enregistrements
 
 - « Ouvrir sur téléphone » dans le menu affiche un QR de connexion à usage unique, valable deux minutes. Le PC et le téléphone doivent être sur le même réseau local.
