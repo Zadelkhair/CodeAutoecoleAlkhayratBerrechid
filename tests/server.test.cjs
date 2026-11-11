@@ -143,8 +143,17 @@ test('remote changes are protected and a rejected push keeps local content', asy
   command(other, 'clone', remote, '.'); command(other, 'config', 'user.name', 'Other'); command(other, 'config', 'user.email', 'other@example.test'); command(other, 'config', 'commit.gpgsign', 'false');
   fs.writeFileSync(path.join(other, 'other.txt'), 'remote change'); command(other, 'add', 'other.txt'); command(other, 'commit', '-m', 'Remote change'); command(other, 'push', 'origin', 'main');
   const remoteHead = command(remote, 'rev-parse', 'main');
+  await assert.rejects(publish.verify(), error => {
+    assert.equal(error.status, 409);
+    assert.match(error.message, /GitHub contient des mises à jour/);
+    return true;
+  });
   fs.writeFileSync(path.join(root, 'db.json'), JSON.stringify({ series: [], local: true }));
-  await assert.rejects(publish.publish(), /conservés/);
+  await assert.rejects(publish.publish(), error => {
+    assert.equal(error.status, 409);
+    assert.match(error.message, /conservés/);
+    return true;
+  });
   assert.equal(command(remote, 'rev-parse', 'main'), remoteHead);
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'db.json'))).local, true);
 });

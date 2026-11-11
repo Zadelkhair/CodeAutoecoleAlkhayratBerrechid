@@ -250,12 +250,14 @@ function createApp(options = {}) {
     wrap(async (req, res) => {
       try {
         res.json(await publication.verify());
-      } catch {
+      } catch (error) {
         res
-          .status(502)
+          .status(error.status === 409 ? 409 : 502)
           .json({
             message:
-              "Ce PC n’a pas pu confirmer son accès GitHub. Vérifiez la connexion et la clé de déploiement autorisée pour ce dépôt.",
+              error.status === 409
+                ? error.message
+                : "Ce PC n’a pas pu confirmer son accès GitHub. Vérifiez la connexion et la clé de déploiement autorisée pour ce dépôt.",
           });
       }
     }),

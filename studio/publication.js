@@ -8,6 +8,15 @@ function createPublication({ root, sync, gitFactory = simpleGit }) {
     ":(exclude)**/.DS_Store",
   ];
   let publishing = false;
+  function remoteUpdateError(error) {
+    if (!/non-fast-forward|fetch first/i.test(String(error.message))) return null;
+    return Object.assign(
+      new Error(
+        "GitHub contient des mises à jour absentes de ce PC. Vos enregistrements et commits locaux sont conservés. Mettez le studio à jour avant de publier.",
+      ),
+      { status: 409 },
+    );
+  }
   const git = () =>
     gitFactory({
       baseDir: root,
@@ -45,7 +54,11 @@ function createPublication({ root, sync, gitFactory = simpleGit }) {
     };
   }
   async function verify() {
-    await git().raw(["push", "--dry-run", "origin", "HEAD:main"]);
+    try {
+      await git().raw(["push", "--dry-run", "origin", "HEAD:main"]);
+    } catch (error) {
+      throw remoteUpdateError(error) || error;
+    }
     return { ok: true, message: "Ce PC est autorisé à publier sur GitHub." };
   }
   async function publish() {
@@ -107,6 +120,8 @@ function createPublication({ root, sync, gitFactory = simpleGit }) {
       };
     } catch (error) {
       if (error.status) throw error;
+      const updateError = remoteUpdateError(error);
+      if (updateError) throw updateError;
       throw Object.assign(
         new Error(
           "Publication non terminée. Les enregistrements locaux sont conservés. Vérifiez la connexion et l’autorisation GitHub ; si la version distante a changé, mettez le PC à jour avant de réessayer.",
